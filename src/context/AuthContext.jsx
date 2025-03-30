@@ -1,5 +1,7 @@
 // src/context/AuthContext.jsx
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from "react";
+
+import { signIn, signUp } from "../api/auth"; // Import your API functions here
 
 // Create the context
 export const AuthContext = createContext(null);
@@ -16,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     const checkAuthStatus = async () => {
       try {
         // Replace this with your actual authentication check
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem("user");
         if (storedUser) {
           setCurrentUser(JSON.parse(storedUser));
         }
@@ -36,12 +38,17 @@ export const AuthProvider = ({ children }) => {
       // Replace with your actual API call
       // const response = await api.post('/login', { email, password });
       // const userData = response.data;
-      
-      // Simulate successful login for now
-      const userData = { email, id: Date.now().toString() };
-      
+
+      const userData = await signIn(email, password);
+      if (!userData) {
+        throw new Error("Login failed");
+      }
+
+      //   // Simulate successful login for now
+      //   const userData = { email, id: Date.now().toString() };
+
       // Store in localStorage and context
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
       setCurrentUser(userData);
       return { success: true };
     } catch (error) {
@@ -56,17 +63,22 @@ export const AuthProvider = ({ children }) => {
       // Replace with your actual API call
       // const response = await api.post('/signup', userData);
       // const returnedUserData = response.data;
-      
-      // Simulate successful signup for now
-      const returnedUserData = { 
-        ...userData, 
-        id: Date.now().toString(),
-        // Remove password from local storage for security
-        password: undefined 
-      };
-      
+
+      const returnedUserData = await signUp(userData);
+      if (!returnedUserData) {
+        throw new Error("Signup failed");
+      }
+
+      //   // Simulate successful signup for now
+      //   const returnedUserData = {
+      //     ...userData,
+      //     id: Date.now().toString(),
+      //     // Remove password from local storage for security
+      //     password: undefined
+      //   };
+
       // Store in localStorage and context
-      localStorage.setItem('user', JSON.stringify(returnedUserData));
+      localStorage.setItem("user", JSON.stringify(returnedUserData));
       setCurrentUser(returnedUserData);
       return { success: true };
     } catch (error) {
@@ -77,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
   // Logout function
   const logout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     setCurrentUser(null);
   };
 
@@ -86,12 +98,8 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
-    loading
+    loading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
