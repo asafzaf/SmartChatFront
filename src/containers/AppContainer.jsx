@@ -1,33 +1,7 @@
-// import { useAuth } from '../context/AuthContext';
-
-// function AppContainer() {
-//   const { currentUser, logout } = useAuth();
-
-//   return (
-//     <div className="app-container">
-//       <header className="app-header">
-//         <h1>Welcome to the App</h1>
-//         <div className="user-info">
-//           <span>Logged in as: {currentUser.email}</span>
-//           <button className="logout-btn" onClick={logout}>
-//             Logout
-//           </button>
-//         </div>
-//       </header>
-
-//       <main className="app-content">
-//         <p>Your application content goes here.</p>
-//         <p>You are now authenticated and have access to protected resources.</p>
-//       </main>
-//     </div>
-//   );
-// }
-
-// export default AppContainer;
-
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
+import logo from "../assets/logo.png";
 
 function AppContainer() {
   const { currentUser, logout } = useAuth();
@@ -44,17 +18,25 @@ function AppContainer() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Chat App</h1>
-        <div className="user-info">
-          <span>Logged in as: {currentUser.email}</span>
-          <button className="logout-btn" onClick={logout}>
-            Logout
-          </button>
+        <div className="header-content">
+          <span className="header-welcom-message">
+            Hello {currentUser.data.user.first_name} !
+          </span>
+          <img src={logo} alt="Logo" className="app-logo" />
+          {/* <h1 className="app-title">SmartChat</h1> */}
+          <div className="user-info">
+            <button className="logout-btn" onClick={logout}>
+              Logout
+            </button>
+          </div>
         </div>
       </header>
-
       <main className="app-content">
-        <ChatWindow messages={messages} onSend={handleSend} />
+        <ChatWindow
+          messages={messages}
+          onSend={handleSend}
+          userData={currentUser.data.user}
+        />
       </main>
     </div>
   );
