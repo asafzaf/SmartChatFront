@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
+import ChatList from "../components/chat/ChatList";
 import logo from "../assets/logo.png";
 
 function AppContainer() {
@@ -31,12 +32,17 @@ function AppContainer() {
           </div>
         </div>
       </header>
-      <main className="app-content">
-        <ChatWindow
-          messages={messages}
-          onSend={handleSend}
-          userData={currentUser.data.user}
-        />
+      <main className="app-main">
+        <div className="sidebar-chat-list">
+          <ChatList />
+        </div>
+        <div className="app-content">
+          <ChatWindow
+            messages={messages}
+            onSend={handleSend}
+            userData={currentUser.data.user}
+          />
+        </div>
       </main>
     </div>
   );
