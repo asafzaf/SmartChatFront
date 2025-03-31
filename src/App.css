@@ -18,19 +18,22 @@ body {
 /* Auth Container Styles */
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* min-height: 100vh; */
   padding: 20px;
   height: 100vh;
+  gap: 20px;
+}
+
+.welcome-logo {
+  width: 300px;
 }
 
 .card {
   width: 100%;
   max-width: 400px;
   min-height: 70%;
-  /* height: 550px; */
-  /* perspective: 1000px; */
 }
 
 .card-inner {
@@ -53,12 +56,13 @@ body {
   backface-visibility: hidden;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: rgb(255, 255, 255);
-  min-height: 70vh;
+  min-height: 60vh;
+  gap: 10px;
 }
 
 .card-back {
@@ -167,7 +171,7 @@ p {
   display: flex;
   padding: 20px;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 30px;
   border-bottom: 1px solid #eee;
 }
@@ -185,7 +189,7 @@ p {
 } */
 
 .app-logo {
-  width: 300px;
+  width: 200px;
   /* height: 200px; */
 }
 
