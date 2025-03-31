@@ -1,9 +1,10 @@
-function MessageList({ messages }) {
+function MessageList({ messages, currentUser }) {
   return (
     <div className="message-list">
       {messages.map((msg, index) => (
         <div key={index} className="message">
-          <strong>{msg.sender}:</strong> {msg.text}
+          {console.log(msg)}
+          <strong>{currentUser.first_name}:</strong> {msg.text}
         </div>
       ))}
     </div>
