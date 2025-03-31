@@ -12,14 +12,17 @@ function MessageInput({ onSend }) {
   };
 
   return (
-    <form className="message-input" onSubmit={handleSubmit}>
+    <form className="message-input-container" onSubmit={handleSubmit}>
       <input
         type="text"
         value={text}
+        className="message-input"
         onChange={(e) => setText(e.target.value)}
         placeholder="Type your message..."
       />
-      <button type="submit">Send</button>
+      <button type="submit" className="send-message-btn">
+        Send
+      </button>
     </form>
   );
 }
