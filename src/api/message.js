@@ -1,0 +1,40 @@
+import axios from "axios";
+import { basicConfig } from "./config.js";
+
+const apiUrl = basicConfig.apiUrl;
+
+export const getMessages = async (chatId, userId) => {
+  try {
+    const response = await axios.get(`${apiUrl}/${chatId}/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "An error occurred while fetching data to get messages - ",
+      error
+    );
+    throw error;
+  }
+};
+
+export const createNewMessage = async (userId, chatId, sender, text) => {
+  // messageData is an object that contains the following properties:
+  // - userId
+  // - chatId
+  // - sender
+  // - text
+  try {
+    const response = await axios.post(`${apiUrl}/message/`, {
+      userId,
+      chatId,
+      sender,
+      text,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "An error occurred while fetching data to get messages - ",
+      error
+    );
+    throw error;
+  }
+};
