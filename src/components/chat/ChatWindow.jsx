@@ -1,10 +1,10 @@
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
-function ChatWindow({ messages, onSend }) {
+function ChatWindow({ messages, onSend, userData }) {
   return (
     <div className="chat-window">
-      <MessageList messages={messages} />
+      <MessageList messages={messages} currentUser={userData} />
       <MessageInput onSend={onSend} />
     </div>
   );
