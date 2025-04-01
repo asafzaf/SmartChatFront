@@ -7,13 +7,12 @@ function ChatList({
 }) {
   return (
     <div className="chat-list">
-      <div className="flex justify-between items-center mb-3">
-        <h2 className="text-lg font-semibold">Chats</h2>
+      <div className="chats-header">
+        <h2 className="chats-title">Chats</h2>
         <button onClick={onCreateChat} className="new-chat-btn">
           New Chat
         </button>
       </div>
-
       {loading ? (
         <p>Loading...</p>
       ) : chats.length === 0 ? (
