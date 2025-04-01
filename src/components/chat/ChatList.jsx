@@ -9,10 +9,7 @@ function ChatList({
     <div className="chat-list">
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-semibold">Chats</h2>
-        <button
-          onClick={onCreateChat}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-sm"
-        >
+        <button onClick={onCreateChat} className="new-chat-btn">
           New Chat
         </button>
       </div>
@@ -22,22 +19,20 @@ function ChatList({
       ) : chats.length === 0 ? (
         <p>No chats found</p>
       ) : (
-        <ul className="space-y-2">
+        <div className="chat-list-container">
           {chats.map((chat) => (
-            <li key={chat._id}>
+            <div key={chat._id}>
               <button
                 onClick={() => onSelectChat(chat._id)}
-                className={`w-full text-left px-3 py-2 rounded ${
-                  chat._id === selectedChatId
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
+                className={`${
+                  chat._id === selectedChatId ? "selected-chat-btn" : "chat-btn"
                 }`}
               >
                 {chat.title}
               </button>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
