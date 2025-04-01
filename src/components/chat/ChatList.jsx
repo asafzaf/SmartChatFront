@@ -1,29 +1,21 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-function ChatList({ onSelectChat, selectedChatId }) {
-  const [chats, setChats] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch all chats on mount
-  useEffect(() => {
-    const fetchChats = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/chats");
-        setChats(res.data);
-      } catch (err) {
-        console.error("Failed to load chats:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChats();
-  }, []);
-
+function ChatList({
+  onSelectChat,
+  selectedChatId,
+  onCreateChat,
+  chats,
+  loading,
+}) {
   return (
     <div className="chat-list">
-      <h2 className="text-lg font-semibold mb-3">Chats</h2>
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-lg font-semibold">Chats</h2>
+        <button
+          onClick={onCreateChat}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-sm"
+        >
+          New Chat
+        </button>
+      </div>
 
       {loading ? (
         <p>Loading...</p>
