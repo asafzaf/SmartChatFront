@@ -1,77 +1,153 @@
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatList from "../components/chat/ChatList";
 import logo from "../assets/logo.png";
+import { io } from "socket.io-client";
 // We'll implement local storage instead of API calls for now
 // import { getMessages, createNewMessage } from "../api/message";
 import { dummyMessages, dummyChats } from "../Data/dummyData";
 
+import { localConfig } from "../api/config";
+
+import { createNewChat, getChatList } from "../api/chat"; // Uncomment when API is ready
+
 function AppContainer() {
   const { currentUser, logout } = useAuth();
   const [messages, setMessages] = useState([]);
-  const [chats, setChats] = useState([]);
+  const [chatList, setChatList] = useState([]);
   const [selectedChatId, setSelectedChatId] = useState(null);
-  const [loading, setLoading] = useState(true); // Changed from isLoading to loading to match ChatList
+  const [loading, setLoading] = useState(true);
+  const [loadingChatList, setLoadingChatList] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(true);
+  const [isNewChat, setIsNewChat] = useState(false);
+  const [loadingNewChat, setLoadingNewChat] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Socket.io reference
+  const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
   const userEmail = currentUser?.data?.user?.email || currentUser.email;
 
+  // Initialize Socket.io connection
+  useEffect(() => {
+    console.log("Initializing Socket.io connection...");
+    // Create socket connection
+  }, [selectedChatId]); // Re-initialize when selectedChatId changes
+
   // Load chats from localStorage on initial load
   useEffect(() => {
-    const loadChats = () => {
+    const initSocket = () => {
       try {
-        const savedChats = localStorage.getItem("chats");
-        if (savedChats) {
-          setChats(JSON.parse(savedChats));
-        } else {
-          // Initialize with dummy data if nothing is saved
-          setChats(dummyChats);
-          localStorage.setItem("chats", JSON.stringify(dummyChats));
-        }
+        socketRef.current = io(
+          localConfig.apiUrl,
+          {
+            transports: ["websocket"], // Use WebSocket and polling transports
+            reconnectionAttempts: 5,
+            reconnectionDelay: 1000,
+            debug: true,
+          } // Use WebSocket transport
+        ); // Change to your server URL
 
-        // Set the first chat as selected if none is selected
-        const savedSelectedChatId = localStorage.getItem("selectedChatId");
-        if (savedSelectedChatId) {
-          setSelectedChatId(savedSelectedChatId);
-        } else if (dummyChats.length > 0) {
-          setSelectedChatId(dummyChats[0]._id);
-        }
+        // Set up event listeners
+        socketRef.current.on("connect", () => {
+          console.log(
+            "Connected to Socket.io server with ID:",
+            socketRef.current.id
+          );
+        });
+
+        socketRef.current.on("connect_error", (error) => {
+          console.error("Socket.io connection error:", error);
+        });
+
+        socketRef.current.on("disconnect", (reason) => {
+          console.log("Disconnected from Socket.io server. Reason:", reason);
+        });
+
+        // socketRef.current.on("chat_list", (chatList) => {
+        //   console.log("Received chat list:", chatList);
+        //   // Update chatList state with the received chat list
+        //   // setChatList(chatList);
+        //   // Save chat list to localStorage
+        // });
+
+        socketRef.current.on("chat_history", (chatHistory) => {
+          console.log("Received chat history:", chatHistory);
+          // Update messages state with chat history
+          setMessages(chatHistory);
+        });
+
+        // Listen for new messages
+        socketRef.current.on("message_recieved", (newMessage) => {
+          console.log("New message received:", newMessage);
+          // Update messages state with the new message
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        });
+
+        socketRef.current.emit("request_chat_list", userId);
+
+        // Clean up on unmount
+        return () => {
+          if (socketRef.current) {
+            socketRef.current.disconnect();
+          }
+        };
       } catch (err) {
         console.error("Error loading chats:", err);
-        setChats(dummyChats);
+        setChatList(dummyChats);
       } finally {
         setLoading(false);
       }
     };
 
-    loadChats();
+    const init_chats = async () => {
+      const chatlist = await getChatList(userId);
+      console.log("Chat list received:", chatlist);
+      if (chatlist.error) {
+        console.error("Error fetching chat list:", chatlist.error);
+      }
+
+      console.log("Chat list:", chatlist.data.chatList);
+      setTimeout(() => {
+        setChatList(chatlist.data.chatList);
+        setLoadingChatList(false);
+      }, 2000); // Delay to allow chat list to update
+    };
+
+    initSocket();
+    init_chats();
   }, []);
 
-  // Load messages when selectedChatId changes
+  // Load messages and join socket room when selectedChatId changes
   useEffect(() => {
     if (userId && selectedChatId) {
       try {
         // Save selected chat ID to localStorage
         localStorage.setItem("selectedChatId", selectedChatId);
 
-        // Load messages from localStorage
-        const savedMessages = localStorage.getItem(
-          `messages_${selectedChatId}`
-        );
-        if (savedMessages) {
-          setMessages(JSON.parse(savedMessages));
-        } else {
-          // Use dummy data as fallback
-          const filtered = dummyMessages.filter(
-            (msg) => msg.chatId === selectedChatId && msg.userId === userId
-          );
-          setMessages(filtered);
-          localStorage.setItem(
-            `messages_${selectedChatId}`,
-            JSON.stringify(filtered)
-          );
-        }
+        // Join the Socket.io room for this chat
+        socketRef.current.emit("join_room", selectedChatId);
+        console.log(`Joined room: ${selectedChatId}`);
+
+        // // Load messages from localStorage
+        // const savedMessages = localStorage.getItem(
+        //   `messages_${selectedChatId}`
+        // );
+        // if (savedMessages) {
+        //   setMessages(JSON.parse(savedMessages));
+        // } else {
+        //   // Use dummy data as fallback
+        //   const filtered = dummyMessages.filter(
+        //     (msg) => msg.chatId === selectedChatId && msg.userId === userId
+        //   );
+        //   setMessages(filtered);
+        //   localStorage.setItem(
+        //     `messages_${selectedChatId}`,
+        //     JSON.stringify(filtered)
+        //   );
+        // }
       } catch (err) {
         console.error("Error loading messages:", err);
         const filtered = dummyMessages.filter(
@@ -93,53 +169,47 @@ function AppContainer() {
     return newMessage;
   };
 
-  const handleSend = async (text) => {
-    if (!userId || !selectedChatId) return;
-
+  const handleSend = async (prompt) => {
+    console.log("Sending message:", prompt);
+    console.log("Selected chat ID:", selectedChatId);
+    console.log("User ID:", userId);
+    console.log("Is new chat:", isNewChat);
+    if (!userId) return;
     try {
-      const newMsg = await createNewMessage({
-        userId,
-        chatId: selectedChatId,
-        sender: userEmail,
-        text,
-      });
-
-      // Update messages in state
-      const updatedMessages = [...messages, newMsg];
-      setMessages(updatedMessages);
-
-      // Save to localStorage
-      localStorage.setItem(
-        `messages_${selectedChatId}`,
-        JSON.stringify(updatedMessages)
-      );
+      if (isNewChat) {
+        // Create a new chat if needed
+        console.log("Creating new chat...");
+        const newChat = await createNewChat(userId, prompt);
+        console.log("New chat created:", newChat);
+        // socketRef.current.emit("request_chat_list", userId);
+        const chatList = await getChatList(userId);
+        console.log("Chat list received:", chatList);
+        setTimeout(() => {
+          setChatList(chatList.chatlist);
+          setSelectedChatId(newChat._id);
+          setIsNewChat(false);
+        }, 2000); // Delay to allow chat list to update
+      } else {
+        console.log("Sending message:", prompt);
+      }
     } catch (err) {
       console.error("Error sending message:", err);
     }
   };
 
   const handleChatSelect = (chatId) => {
+    // Leave current room if any
+    if (selectedChatId && socketRef.current) {
+      socketRef.current.emit("leave_room", selectedChatId);
+    }
+
     setSelectedChatId(chatId);
     setMessages([]); // Clear previous messages
   };
 
-  const createNewChat = () => {
-    const newChat = {
-      _id: Date.now().toString(), // Generate a pseudo-unique ID
-      title: `New Chat ${chats.length + 1}`,
-      participants: [userId],
-      createdAt: new Date().toISOString(),
-    };
-
-    // Update chats in state
-    const updatedChats = [...chats, newChat];
-    setChats(updatedChats);
-
-    // Save to localStorage
-    localStorage.setItem("chats", JSON.stringify(updatedChats));
-
-    // Select the new chat
-    setSelectedChatId(newChat._id);
+  const setNewChatMode = () => {
+    setIsNewChat(true);
+    setMessages([]); // Clear previous messages
   };
 
   return (
@@ -160,11 +230,11 @@ function AppContainer() {
       <main className="app-main">
         <div className="sidebar-chat-list">
           <ChatList
-            chats={chats}
+            chats={chatList}
             loading={loading}
             onSelectChat={handleChatSelect}
             selectedChatId={selectedChatId}
-            onCreateChat={createNewChat}
+            onCreateChat={setNewChatMode}
           />
         </div>
         <div className="app-content">
@@ -172,6 +242,7 @@ function AppContainer() {
             messages={messages}
             onSend={handleSend}
             userData={currentUser.data.user}
+            isNewChat={isNewChat}
           />
         </div>
       </main>

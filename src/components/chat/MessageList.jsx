@@ -1,7 +1,7 @@
-function MessageList({ messages, currentUser }) {
+function MessageList({ messages, currentUser, isNewChat }) {
   return (
     <div className="message-list">
-      {messages.length === 0 ? (
+      {messages.length === 0 || isNewChat ? (
         <div className="text-center text-gray-500 py-4">
           No messages yet. Start a conversation!
         </div>
