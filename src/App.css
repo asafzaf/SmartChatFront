@@ -87,7 +87,7 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -325,6 +325,32 @@ p {
 .send-message-btn:hover {
   background-color: #cecece;
   border-color: #cecece;
+}
+
+.no-messages {
+  text-align: center;
+  color: #6b7280; /* Tailwind's gray-500 */
+  padding: 1rem 0;
+}
+
+.message-sent {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 70%;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message-received {
+  background-color: #f1f1f1;
+  color: #333;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 70%;
+  align-self: flex-start;
+  margin-right: auto;
 }
 
 /* Loading Spinner */

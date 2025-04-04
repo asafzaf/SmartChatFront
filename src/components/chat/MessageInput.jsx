@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function MessageInput({ onSend }) {
+function MessageInput({ onSend, isNewChat, waitingForResponse }) {
   const [text, setText] = useState("");
 
   const handleSubmit = (e) => {
@@ -10,6 +10,8 @@ function MessageInput({ onSend }) {
       setText("");
     }
   };
+
+  const submitButton = isNewChat ? "Start Chat" : "Send";
 
   return (
     <form className="message-input-container" onSubmit={handleSubmit}>
@@ -21,7 +23,7 @@ function MessageInput({ onSend }) {
         placeholder="Type your message..."
       />
       <button type="submit" className="send-message-btn">
-        Send
+        {submitButton}
       </button>
     </form>
   );
