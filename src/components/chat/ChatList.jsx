@@ -19,15 +19,15 @@ function ChatList({
         <p>No chats found</p>
       ) : (
         <div className="chat-list-container">
-          {chats.map((chat) => (
-            <div key={chat._id}>
+          {chats.map((chat, index) => (
+            <div key={`${chat._id}-${index}`}>
               <button
                 onClick={() => onSelectChat(chat._id)}
                 className={`${
                   chat._id === selectedChatId ? "selected-chat-btn" : "chat-btn"
                 }`}
               >
-                {chat.title}
+                {chat.title || `Chat ${index + 1}`}
               </button>
             </div>
           ))}

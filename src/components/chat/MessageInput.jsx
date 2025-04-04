@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function MessageInput({ onSend, isNewChat }) {
+function MessageInput({ onSend, isNewChat, waitingForResponse }) {
   const [text, setText] = useState("");
 
   const handleSubmit = (e) => {

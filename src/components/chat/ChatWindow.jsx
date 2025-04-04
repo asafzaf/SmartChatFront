@@ -1,7 +1,7 @@
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
 
-function ChatWindow({ messages, onSend, userData, isNewChat }) {
+function ChatWindow({ messages, onSend, userData, isNewChat, waitingForResponse }) {
   return (
     <div className="chat-window">
       <MessageList
@@ -9,7 +9,7 @@ function ChatWindow({ messages, onSend, userData, isNewChat }) {
         currentUser={userData}
         isNewChat={isNewChat}
       />
-      <MessageInput onSend={onSend} isNewChat={isNewChat} />
+      <MessageInput onSend={onSend} isNewChat={isNewChat} waitingForResponse={waitingForResponse} />
     </div>
   );
 }

@@ -20,15 +20,14 @@ function AppContainer() {
   const [loading, setLoading] = useState(true);
   const [loadingChatList, setLoadingChatList] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(true);
-  const [isNewChat, setIsNewChat] = useState(false);
-  const [loadingNewChat, setLoadingNewChat] = useState(true);
+  const [waitingForResponse, setWaitingForResponse] = useState(false);
+  const [isNewChat, setIsNewChat] = useState(true); // Flag to indicate if it's a new chat
   const [error, setError] = useState(null);
 
   // Socket.io reference
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
-  const userEmail = currentUser?.data?.user?.email || currentUser.email;
 
   // Initialize Socket.io connection
   useEffect(() => {
@@ -40,13 +39,14 @@ function AppContainer() {
   useEffect(() => {
     const initSocket = () => {
       try {
+        setLoadingMessages(true);
+        console.log("Loading chats...");
         socketRef.current = io(
           localConfig.apiUrl,
           {
             transports: ["websocket"], // Use WebSocket and polling transports
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
-            debug: true,
           } // Use WebSocket transport
         ); // Change to your server URL
 
@@ -96,13 +96,15 @@ function AppContainer() {
         };
       } catch (err) {
         console.error("Error loading chats:", err);
-        setChatList(dummyChats);
+        setChatList([]);
       } finally {
-        setLoading(false);
+        setLoadingMessages(false);
       }
     };
 
     const init_chats = async () => {
+      console.log("Loading chat list...");
+      setLoadingChatList(true);
       const chatlist = await getChatList(userId);
       console.log("Chat list received:", chatlist);
       if (chatlist.error) {
@@ -124,30 +126,9 @@ function AppContainer() {
   useEffect(() => {
     if (userId && selectedChatId) {
       try {
-        // Save selected chat ID to localStorage
-        localStorage.setItem("selectedChatId", selectedChatId);
-
         // Join the Socket.io room for this chat
         socketRef.current.emit("join_room", selectedChatId);
         console.log(`Joined room: ${selectedChatId}`);
-
-        // // Load messages from localStorage
-        // const savedMessages = localStorage.getItem(
-        //   `messages_${selectedChatId}`
-        // );
-        // if (savedMessages) {
-        //   setMessages(JSON.parse(savedMessages));
-        // } else {
-        //   // Use dummy data as fallback
-        //   const filtered = dummyMessages.filter(
-        //     (msg) => msg.chatId === selectedChatId && msg.userId === userId
-        //   );
-        //   setMessages(filtered);
-        //   localStorage.setItem(
-        //     `messages_${selectedChatId}`,
-        //     JSON.stringify(filtered)
-        //   );
-        // }
       } catch (err) {
         console.error("Error loading messages:", err);
         const filtered = dummyMessages.filter(
@@ -157,17 +138,6 @@ function AppContainer() {
       }
     }
   }, [userId, selectedChatId]);
-
-  const createNewMessage = async (messageData) => {
-    // Simulate API call - in reality, this would call your backend
-    const newMessage = {
-      _id: Date.now().toString(), // Generate a pseudo-unique ID
-      ...messageData,
-      timestamp: new Date().toISOString(),
-    };
-
-    return newMessage;
-  };
 
   const handleSend = async (prompt) => {
     console.log("Sending message:", prompt);
@@ -179,16 +149,23 @@ function AppContainer() {
       if (isNewChat) {
         // Create a new chat if needed
         console.log("Creating new chat...");
-        const newChat = await createNewChat(userId, prompt);
+        const newChat = await createNewChat(
+          userId,
+          socketRef.current.id,
+          prompt
+        );
         console.log("New chat created:", newChat);
         // socketRef.current.emit("request_chat_list", userId);
-        const chatList = await getChatList(userId);
-        console.log("Chat list received:", chatList);
-        setTimeout(() => {
-          setChatList(chatList.chatlist);
-          setSelectedChatId(newChat._id);
-          setIsNewChat(false);
-        }, 2000); // Delay to allow chat list to update
+        // const chatList = await getChatList(userId);
+        // console.log("Chat list received:", chatList);
+        // setTimeout(() => {
+        // console.log("Chat list:", chatList.data.chatlist);
+
+        setChatList((prevChatList) => [...prevChatList, newChat.data.chat]); // Update chat list with the new chat
+        handleChatSelect(newChat.data.chat._id);
+        setWaitingForResponse(true);
+        setIsNewChat(false);
+        // }, 2000); // Delay to allow chat list to update
       } else {
         console.log("Sending message:", prompt);
       }
@@ -198,18 +175,30 @@ function AppContainer() {
   };
 
   const handleChatSelect = (chatId) => {
+    if (!chatId) {
+      setIsNewChat(true); // Set new chat mode if no chat ID is provided
+      setMessages([]); // Clear messages
+      return;
+    }
+    console.log("Selected chat ID:", chatId);
+    console.log("User ID:", userId);
+    console.log("Is new chat:", isNewChat);
+    if (chatId === selectedChatId) return; // Prevent re-selecting the same chat
+    if (!userId) return;
+
     // Leave current room if any
     if (selectedChatId && socketRef.current) {
+      console.log("Leaving room:", selectedChatId);
       socketRef.current.emit("leave_room", selectedChatId);
     }
 
+    setIsNewChat(false); // Reset new chat mode
     setSelectedChatId(chatId);
-    setMessages([]); // Clear previous messages
+    // setMessages([]); // Clear previous messages
   };
 
   const setNewChatMode = () => {
-    setIsNewChat(true);
-    setMessages([]); // Clear previous messages
+    handleChatSelect(null); // Set new chat mode
   };
 
   return (
@@ -231,7 +220,7 @@ function AppContainer() {
         <div className="sidebar-chat-list">
           <ChatList
             chats={chatList}
-            loading={loading}
+            loading={loadingChatList}
             onSelectChat={handleChatSelect}
             selectedChatId={selectedChatId}
             onCreateChat={setNewChatMode}
@@ -242,6 +231,7 @@ function AppContainer() {
             messages={messages}
             onSend={handleSend}
             userData={currentUser.data.user}
+            waitingForResponse={waitingForResponse}
             isNewChat={isNewChat}
           />
         </div>

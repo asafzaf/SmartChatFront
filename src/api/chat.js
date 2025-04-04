@@ -3,9 +3,9 @@ import { localConfig } from "./config.js";
 
 const apiUrl = localConfig.apiUrl;
 
-export const createNewChat = async (userId, prompt) => {
+export const createNewChat = async (userId, socketId, prompt) => {
   try {
-    const response = await axios.post(`${apiUrl}/api/chat`, { userId, prompt });
+    const response = await axios.post(`${apiUrl}/api/chat`, { userId, socketId, prompt });
     return response.data;
   } catch (error) {
     console.error("Error creating new chat:", error);
