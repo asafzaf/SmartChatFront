@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 // import { getMessages, createNewMessage } from "../api/message";
 import { dummyMessages, dummyChats } from "../Data/dummyData";
 
-import { localConfig } from "../api/config";
+import { basicConfig } from "../api/config";
 
 import { createNewChat, getChatList } from "../api/chat"; // Uncomment when API is ready
 
@@ -42,7 +42,7 @@ function AppContainer() {
         setLoadingMessages(true);
         console.log("Loading chats...");
         socketRef.current = io(
-          localConfig.apiUrl,
+          basicConfig.apiUrl,
           {
             transports: ["websocket"], // Use WebSocket and polling transports
             reconnectionAttempts: 5,

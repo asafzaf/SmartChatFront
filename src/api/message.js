@@ -5,7 +5,7 @@ const apiUrl = basicConfig.apiUrl;
 
 export const getMessages = async (chatId, userId) => {
   try {
-    const response = await axios.get(`${apiUrl}/${chatId}/${userId}`);
+    const response = await axios.get(`${apiUrl}/api/${chatId}/${userId}`);
     return response.data;
   } catch (error) {
     console.error(
@@ -23,7 +23,7 @@ export const createNewMessage = async (userId, chatId, sender, text) => {
   // - sender
   // - text
   try {
-    const response = await axios.post(`${apiUrl}/message/`, {
+    const response = await axios.post(`${apiUrl}/api/message/`, {
       userId,
       chatId,
       sender,

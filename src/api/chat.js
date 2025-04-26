@@ -1,7 +1,7 @@
 import axios from "axios";
-import { localConfig } from "./config.js";
+import { basicConfig } from "./config.js";
 
-const apiUrl = localConfig.apiUrl;
+const apiUrl = basicConfig.apiUrl;
 
 export const createNewChat = async (userId, socketId, prompt) => {
   try {
