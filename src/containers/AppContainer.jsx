@@ -29,11 +29,11 @@ function AppContainer() {
 
   const userId = currentUser?.data?.user?._id;
 
-  // Initialize Socket.io connection
-  useEffect(() => {
-    console.log("Initializing Socket.io connection...");
-    // Create socket connection
-  }, [selectedChatId]); // Re-initialize when selectedChatId changes
+  // // Initialize Socket.io connection
+  // useEffect(() => {
+  //   console.log("Initializing Socket.io connection...");
+  //   // Create socket connection
+  // }, [selectedChatId]); // Re-initialize when selectedChatId changes
 
   // Load chats from localStorage on initial load
   useEffect(() => {
@@ -56,6 +56,7 @@ function AppContainer() {
             "Connected to Socket.io server with ID:",
             socketRef.current.id
           );
+          socketRef.current.emit("identify_user", userId); // Send user ID to server
         });
 
         socketRef.current.on("connect_error", (error) => {
@@ -66,27 +67,69 @@ function AppContainer() {
           console.log("Disconnected from Socket.io server. Reason:", reason);
         });
 
-        // socketRef.current.on("chat_list", (chatList) => {
-        //   console.log("Received chat list:", chatList);
-        //   // Update chatList state with the received chat list
-        //   // setChatList(chatList);
-        //   // Save chat list to localStorage
-        // });
-
-        socketRef.current.on("chat_history", (chatHistory) => {
-          console.log("Received chat history:", chatHistory);
-          // Update messages state with chat history
-          setMessages(chatHistory);
+        // Listen for chat list
+        socketRef.current.on("chat_list", (chats) => {
+          setChatList(chats);
+          setLoadingChatList(false);
         });
 
-        // Listen for new messages
-        socketRef.current.on("message_recieved", (newMessage) => {
-          console.log("New message received:", newMessage);
-          // Update messages state with the new message
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        socketRef.current.on("chat_history", (messages) => {
+          console.log("Received chat history:", messages);
+          setMessages(messages);
+          setLoadingMessages(false);
         });
 
-        socketRef.current.emit("request_chat_list", userId);
+        socketRef.current.on("chat_created", (data) => {
+          console.log("New chat created:", data);
+          setChatList((prevChatList) => [...prevChatList, data.chat]);
+          setSelectedChatId(data.chat._id); // Automatically select the new chat
+          setIsNewChat(false);
+
+          const userMessage = {
+            chatId: data.chat._id,
+            sender: userId,
+            message: data.chat.userPrompt,
+            timestamp: new Date(),
+            isBot: false,
+          };
+
+          // Add temporary waiting message
+          const waitingMessage = {
+            chatId: data.chat._id,
+            sender: "bot",
+            text: "I'm thinking...",
+            timestamp: new Date(),
+            isBot: true,
+            isTyping: true, // Special flag for waiting message
+          };
+
+          setMessages([userMessage, waitingMessage]);
+        });
+
+        // Listen for new messages (from bot)
+        socketRef.current.on("bot_response", (newMessage) => {
+          console.log("Bot response received:", newMessage);
+
+          // Remove temporary waiting message and add the actual response
+          setMessages((prevMessages) => {
+            // Filter out any temporary "typing" messages
+            const messagesWithoutTyping = prevMessages.filter(
+              (msg) => !msg.isTyping
+            );
+            return [...messagesWithoutTyping, newMessage];
+          });
+
+          setWaitingForResponse(false);
+        });
+
+        // Listen for confirmation of message saved
+        socketRef.current.on("message_saved", (message) => {
+          console.log("Message saved confirmation:", message);
+        });
+
+        if (userId) {
+          socketRef.current.emit("request_chat_list", userId);
+        }
 
         // Clean up on unmount
         return () => {
@@ -120,54 +163,121 @@ function AppContainer() {
 
     initSocket();
     init_chats();
-  }, []);
+  }, [userId]); // Only run on initial load
 
   // Load messages and join socket room when selectedChatId changes
+  // Join chat room when selectedChatId changes
   useEffect(() => {
-    if (userId && selectedChatId) {
-      try {
-        // Join the Socket.io room for this chat
-        socketRef.current.emit("join_room", selectedChatId);
-        console.log(`Joined room: ${selectedChatId}`);
-      } catch (err) {
-        console.error("Error loading messages:", err);
-        const filtered = dummyMessages.filter(
-          (msg) => msg.chatId === selectedChatId && msg.userId === userId
-        );
-        setMessages(filtered);
-      }
+    if (!socketRef.current || !userId || !selectedChatId) return;
+
+    try {
+      // Join the Socket.io room for this chat
+      socketRef.current.emit("join_room", selectedChatId);
+      console.log(`Joined room: ${selectedChatId}`);
+      setLoadingMessages(true);
+
+      // The server will send back chat_history event
+    } catch (err) {
+      console.error("Error joining chat room:", err);
+      setLoadingMessages(false);
     }
   }, [userId, selectedChatId]);
 
+  // Modify your handleSend function to add the temporary message
   const handleSend = async (prompt) => {
-    console.log("Sending message:", prompt);
-    console.log("Selected chat ID:", selectedChatId);
-    console.log("User ID:", userId);
-    console.log("Is new chat:", isNewChat);
-    if (!userId) return;
+    if (!userId || !socketRef.current) return;
+
     try {
       if (isNewChat) {
-        // Create a new chat if needed
+        // Create a new chat
         console.log("Creating new chat...");
-        const newChat = await createNewChat(
-          userId,
-          socketRef.current.id,
-          prompt
-        );
-        console.log("New chat created:", newChat);
-        // socketRef.current.emit("request_chat_list", userId);
-        // const chatList = await getChatList(userId);
-        // console.log("Chat list received:", chatList);
-        // setTimeout(() => {
-        // console.log("Chat list:", chatList.data.chatlist);
+        setLoadingMessages(true);
+        let data = {
+          userId: userId,
+          socketId: socketRef.current.id,
+          prompt: prompt,
+        };
+        socketRef.current.emit("create_chat", data); // Emit event to create a new chat
+        // const newChat = await createNewChat(
+        //   userId,
+        //   socketRef.current.id,
+        //   prompt
+        // );
+        // console.log("New chat created:", newChat);
 
-        setChatList((prevChatList) => [...prevChatList, newChat.data.chat]); // Update chat list with the new chat
-        handleChatSelect(newChat.data.chat._id);
+        // Update UI with new chat
+        // const chatId = newChat.data.chat._id;
+        // setChatList((prevChatList) => [...prevChatList, newChat.data.chat]);
+
+        // // Update selected chat
+        // setSelectedChatId(chatId);
+        // setIsNewChat(false);
+
+        // Join the new chat room
+        // socketRef.current.emit("join_room", chatId);
+
+        // Add user message to UI immediately for better UX
+        const userMessage = {
+          sender: userId,
+          message: prompt,
+          timestamp: new Date(),
+          isBot: false,
+        };
+
+        // Add temporary waiting message
+        const waitingMessage = {
+          sender: "bot",
+          message: "",
+          timestamp: new Date(),
+          isBot: true,
+          isTyping: true, // Special flag for waiting message
+        };
+
+        setMessages([userMessage, waitingMessage]);
+
+        // Send message to the room
+        socketRef.current.emit("send_message", {
+          chatId: selectedChatId,
+          message: prompt,
+        });
+
         setWaitingForResponse(true);
-        setIsNewChat(false);
-        // }, 2000); // Delay to allow chat list to update
       } else {
-        console.log("Sending message:", prompt);
+        // Send message to existing chat
+        console.log("Sending message to existing chat:", selectedChatId);
+
+        // Add user message to UI immediately
+        const userMessage = {
+          chatId: selectedChatId,
+          sender: userId,
+          message: prompt,
+          timestamp: new Date(),
+          isBot: false,
+        };
+
+        // Add temporary waiting message
+        const waitingMessage = {
+          chatId: selectedChatId,
+          sender: "bot",
+          message: "",
+          timestamp: new Date(),
+          isBot: true,
+          isTyping: true, // Special flag for waiting message
+        };
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          userMessage,
+          waitingMessage,
+        ]);
+
+        // Send message to the room
+        socketRef.current.emit("send_message", {
+          chatId: selectedChatId,
+          message: prompt,
+        });
+
+        setWaitingForResponse(true);
       }
     } catch (err) {
       console.error("Error sending message:", err);
@@ -176,29 +286,25 @@ function AppContainer() {
 
   const handleChatSelect = (chatId) => {
     if (!chatId) {
-      setIsNewChat(true); // Set new chat mode if no chat ID is provided
-      setMessages([]); // Clear messages
+      setIsNewChat(true);
+      setMessages([]);
+      setSelectedChatId(null);
       return;
     }
-    console.log("Selected chat ID:", chatId);
-    console.log("User ID:", userId);
-    console.log("Is new chat:", isNewChat);
+
     if (chatId === selectedChatId) return; // Prevent re-selecting the same chat
     if (!userId) return;
 
-    // Leave current room if any
-    if (selectedChatId && socketRef.current) {
-      console.log("Leaving room:", selectedChatId);
-      socketRef.current.emit("leave_room", selectedChatId);
-    }
-
-    setIsNewChat(false); // Reset new chat mode
+    // No need to explicitly leave rooms - the server handles this
+    setIsNewChat(false);
     setSelectedChatId(chatId);
-    // setMessages([]); // Clear previous messages
+    setMessages([]); // Clear messages while loading new ones
+    setLoadingMessages(true);
   };
 
   const setNewChatMode = () => {
     handleChatSelect(null); // Set new chat mode
+    setWaitingForResponse(false); // Reset waiting state
   };
 
   return (
@@ -230,6 +336,7 @@ function AppContainer() {
           <ChatWindow
             messages={messages}
             onSend={handleSend}
+            loading={loadingMessages}
             userData={currentUser.data.user}
             waitingForResponse={waitingForResponse}
             isNewChat={isNewChat}

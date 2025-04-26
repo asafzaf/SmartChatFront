@@ -5,12 +5,13 @@ function MessageInput({ onSend, isNewChat, waitingForResponse }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (text.trim()) {
+    if (text.trim() && !waitingForResponse) {
       onSend(text);
       setText("");
     }
   };
 
+  const inputPlaceholder = waitingForResponse ? "Waiting for response..." : "Type your message...";
   const submitButton = isNewChat ? "Start Chat" : "Send";
 
   return (
@@ -20,9 +21,14 @@ function MessageInput({ onSend, isNewChat, waitingForResponse }) {
         value={text}
         className="message-input"
         onChange={(e) => setText(e.target.value)}
-        placeholder="Type your message..."
+        placeholder={inputPlaceholder}
+        disabled={waitingForResponse}
       />
-      <button type="submit" className="send-message-btn">
+      <button
+        type="submit"
+        className="send-message-btn"
+        disabled={waitingForResponse}
+      >
         {submitButton}
       </button>
     </form>
