@@ -1,5 +1,5 @@
 export const basicConfig = {
-  apiUrl: "http://localhost:3000",
+  apiUrl: "https://smartchat-ufcj.onrender.com",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
