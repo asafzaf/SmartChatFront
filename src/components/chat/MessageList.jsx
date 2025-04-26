@@ -1,9 +1,12 @@
 import MessageComponent from "./MessageComponent";
+import LoadingSpinner from "../general/LoadingSpinner";
 
-function MessageList({ messages, currentUser, isNewChat }) {
+function MessageList({ messages, currentUser, loading, isNewChat }) {
   return (
     <div className="message-list">
-      {messages.length === 0 || isNewChat ? (
+      {loading ? (
+        <LoadingSpinner />
+      ) : messages.length === 0 || isNewChat ? (
         <div className="no-messages">
           No messages yet. Start a conversation!
         </div>
