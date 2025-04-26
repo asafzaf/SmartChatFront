@@ -8,7 +8,7 @@ import { io } from "socket.io-client";
 // import { getMessages, createNewMessage } from "../api/message";
 import { dummyMessages, dummyChats } from "../Data/dummyData";
 
-import { basicConfig } from "../api/config";
+import { basicConfig } from "../../etc/secrets/config.js";
 
 import { createNewChat, getChatList } from "../api/chat"; // Uncomment when API is ready
 

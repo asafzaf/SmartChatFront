@@ -1,5 +1,5 @@
 import axios from "axios";
-import { basicConfig } from "./config.js";
+import { basicConfig } from "../../etc/secrets/config.js";
 
 const apiUrl = basicConfig.apiUrl;
 
