@@ -37,8 +37,10 @@ function AppContainer() {
 
   // Load chats from localStorage on initial load
   useEffect(() => {
-    const initSocket = () => {
+    const initSocket = async () => {
       try {
+        console.log("Initializing Socket.io connection...");
+        console.log("User ID:", userId);
         setLoadingMessages(true);
         console.log("Loading chats...");
         socketRef.current = io(
@@ -52,6 +54,7 @@ function AppContainer() {
 
         // Set up event listeners
         socketRef.current.on("connect", () => {
+          if (!socketRef.current.id) return; // Check if socket is connected
           console.log(
             "Connected to Socket.io server with ID:",
             socketRef.current.id
