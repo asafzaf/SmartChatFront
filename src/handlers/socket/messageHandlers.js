@@ -19,7 +19,13 @@ const setupMessageHandlers = (
         const messagesWithoutTyping = prevMessages.filter(
           (msg) => !msg.isTyping
         );
-        return [...messagesWithoutTyping, newMessage];
+        // Check if the new message already exists in the previous messages
+        if (!messagesWithoutTyping.some((msg) => msg._id === newMessage._id)) {
+            console.log("Adding new message:", newMessage);
+            return [...messagesWithoutTyping, newMessage];
+        }
+        console.log("Message already exists, not adding:", newMessage);
+        return messagesWithoutTyping;
       });
   
       setWaitingForResponse(false);

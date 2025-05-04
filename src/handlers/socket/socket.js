@@ -105,7 +105,7 @@ const sendMessageToExistingChat = (
   const userMessage = {
     chatId: chatId,
     sender: userId,
-    message: message,
+    text: message,
     timestamp: new Date(),
     isBot: false,
   };
@@ -114,7 +114,7 @@ const sendMessageToExistingChat = (
   const waitingMessage = {
     chatId: chatId,
     sender: "bot",
-    message: "",
+    text: "I'm thinking...",
     timestamp: new Date(),
     isBot: true,
     isTyping: true,
