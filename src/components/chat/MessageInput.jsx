@@ -11,7 +11,9 @@ function MessageInput({ onSend, isNewChat, waitingForResponse }) {
     }
   };
 
-  const inputPlaceholder = waitingForResponse ? "Waiting for response..." : "Type your message...";
+  const inputPlaceholder = waitingForResponse
+    ? "Waiting for response..."
+    : "Type your message...";
   const submitButton = isNewChat ? "Start Chat" : "Send";
 
   return (
@@ -26,7 +28,8 @@ function MessageInput({ onSend, isNewChat, waitingForResponse }) {
       />
       <button
         type="submit"
-        className="send-message-btn"
+        // className="send-message-btn"
+        className={isNewChat ? "start-chat-btn" : "send-message-btn"}
         disabled={waitingForResponse}
       >
         {submitButton}
