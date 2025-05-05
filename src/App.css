@@ -362,7 +362,7 @@ button:active {
 
   border-radius: 1.5rem;
   min-width: 200px;
-  /* max-width: 70%; */
+  max-width: 80%;
   align-self: flex-end;
   margin-left: auto;
 }
@@ -372,7 +372,7 @@ button:active {
   color: #333;
   padding: 20px;
   border-radius: 1.5rem;
-  max-width: 80%;
+  /* max-width: 80%; */
   align-self: flex-start;
   margin-right: auto;
 }
