@@ -17,13 +17,10 @@ const MessageComponent = ({ message, currentUser }) => {
         message.sender === currentUser._id ? "sent" : "received"
       }`}
     >
+      {/* <strong>
+        {message.sender === currentUser._id ? "Me" : message.sender}:
+      </strong> */}
       <div className="message-content">
-        <strong>
-          {message.sender === currentUser._id
-            ? currentUser.first_name
-            : message.sender}
-          :
-        </strong>{" "}
         {message.text}
         {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {dumMessage.text}
