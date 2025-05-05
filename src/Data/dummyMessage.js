@@ -8,7 +8,7 @@ Object-Oriented Programming (OOP) is a programming paradigm based on the concept
 - **Encapsulation**: Bundling data and methods that operate on that data.
 - **Abstraction**: Hiding complex implementation details and showing only the necessary features.
 - **Inheritance**: Enabling new classes to reuse and extend existing classes.
-- **Polymorphism**: Allowing objects to be treated as instances of their parent class, even if they behave differently.
+- **Polymorphism**: Allowing objects to be treated as instances of their parent class, even if they behave differently just add more text more text more text more text more text .
 
 ### 💻 Code Example (JavaScript):
 \`\`\`javascript
