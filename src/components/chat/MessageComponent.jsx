@@ -1,6 +1,8 @@
 import React from "react";
 
 const MessageComponent = ({ message, currentUser }) => {
+  console.log("MessageComponent", message); // TBD
+
   return (
     <div
       className={`message-${
