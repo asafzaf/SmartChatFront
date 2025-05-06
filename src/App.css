@@ -470,3 +470,64 @@ button:active {
 .bot-message ul {
   padding-left: 20px;
 }
+
+.chat-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.trash-icon {
+  color: #888;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color 0.2s ease;
+}
+.trash-icon:hover {
+  color: red;
+}
+
+.delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 300px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #ccc;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
