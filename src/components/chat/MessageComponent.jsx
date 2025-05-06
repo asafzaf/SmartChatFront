@@ -1,15 +1,9 @@
 import React from "react";
-import dummyMessage from "../../Data/dummyMessage";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const MessageComponent = ({ message, currentUser }) => {
   console.log("MessageComponent", message); // TBD
-
-  // const dumMessage = {
-  //   sender: "AI-System",
-  //   text: dummyMessage,
-  // };
 
   return (
     <div
@@ -21,10 +15,15 @@ const MessageComponent = ({ message, currentUser }) => {
         {message.sender === currentUser._id ? "Me" : message.sender}:
       </strong> */}
       <div className="message-content">
-        {message.text}
-        {/* <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {dumMessage.text}
-        </ReactMarkdown> */}
+        {message.sender === currentUser._id ? (
+          message.text
+        ) : (
+          <div className="bot-message">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {message.text}
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
     </div>
   );
