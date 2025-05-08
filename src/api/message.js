@@ -1,7 +1,6 @@
 import axios from "axios";
-import { basicConfig } from "../../etc/secrets/config.js";
 
-const apiUrl = basicConfig.apiUrl;
+const apiUrl = process.env.apiUrl;
 
 export const getMessages = async (chatId, userId) => {
   try {
