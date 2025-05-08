@@ -1,8 +1,7 @@
 import axios from "axios";
 
-const apiUrl = process.env.apiUrl;
-
 export const signUp = async (userData) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   try {
     const response = await axios.post(`${apiUrl}/api/auth/signup`, userData);
     return response.data;
@@ -14,6 +13,8 @@ export const signUp = async (userData) => {
 
 export const signIn = async (email, password) => {
   try {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    console.log(apiUrl+`/api/auth/login`);
     const response = await axios.post(`${apiUrl}/api/auth/login`, {
       email,
       password,

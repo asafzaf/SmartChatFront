@@ -3,8 +3,6 @@ import setupConnectionHandlers from "./connectionHandlers.js";
 import setupChatHandlers from "./chatHandlers.js";
 import setupMessageHandlers from "./messageHandlers.js";
 
-const apiUrl = process.env.apiUrl;
-
 /**
  * Initialize and configure Socket.io connection
  * @param {string} userId - Current user ID
@@ -29,6 +27,7 @@ const initializeSocket = (
 ) => {
   console.log("Initializing Socket.io connection...");
   console.log("User ID:", userId);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const socket = io(apiUrl, {
     transports: ["websocket"],

@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const apiUrl = process.env.apiUrl;
 
 export const getMessages = async (chatId, userId) => {
   try {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const response = await axios.get(`${apiUrl}/api/${chatId}/${userId}`);
     return response.data;
   } catch (error) {
@@ -21,7 +21,9 @@ export const createNewMessage = async (userId, chatId, sender, text) => {
   // - chatId
   // - sender
   // - text
+  
   try {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const response = await axios.post(`${apiUrl}/api/message/`, {
       userId,
       chatId,
