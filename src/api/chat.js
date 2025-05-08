@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const apiUrl = process.env.API_URL;
 
 export const createNewChat = async (userId, socketId, prompt) => {
   try {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const response = await axios.post(`${apiUrl}/api/chat`, {
       userId,
       socketId,
@@ -18,6 +18,7 @@ export const createNewChat = async (userId, socketId, prompt) => {
 
 export const getChatList = async (userId) => {
   try {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const response = await axios.get(`${apiUrl}/api/chat/${userId}/list`);
     return response.data;
   } catch (error) {
@@ -28,6 +29,7 @@ export const getChatList = async (userId) => {
 
 export const deleteChat = async (chatId) => {
   try {
+    const apiUrl = import.meta.env.VITE_API_URL;
     console.log("Enter chat deleting");
     const res = await axios.delete(`${apiUrl}/api/chat/${chatId}`);
     console.log("deleting chat:", res.data);

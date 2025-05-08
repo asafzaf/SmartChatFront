@@ -1,12 +1,9 @@
 import axios from "axios";
 
-const apiUrl = process.env.API_URL;
-
 export const signUp = async (userData) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   try {
-    console.log(apiUrl);
-    console.log(apiUrl+`/api/auth/signup`);
-    const response = await axios.post(apiUrl+`/api/auth/signup`, userData);
+    const response = await axios.post(`${apiUrl}/api/auth/signup`, userData);
     return response.data;
   } catch (error) {
     console.error("Error during signup:", error);
@@ -16,9 +13,9 @@ export const signUp = async (userData) => {
 
 export const signIn = async (email, password) => {
   try {
-    console.log(apiUrl);
+    const apiUrl = import.meta.env.VITE_API_URL;
     console.log(apiUrl+`/api/auth/login`);
-    const response = await axios.post(apiUrl+`/api/auth/login`, {
+    const response = await axios.post(`${apiUrl}/api/auth/login`, {
       email,
       password,
     });
