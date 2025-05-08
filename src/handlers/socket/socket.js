@@ -3,7 +3,7 @@ import setupConnectionHandlers from "./connectionHandlers.js";
 import setupChatHandlers from "./chatHandlers.js";
 import setupMessageHandlers from "./messageHandlers.js";
 
-const apiUrl = process.env.apiUrl;
+const apiUrl = process.env.API_URL;
 
 /**
  * Initialize and configure Socket.io connection

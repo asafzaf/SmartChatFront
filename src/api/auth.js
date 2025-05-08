@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = process.env.apiUrl;
+const apiUrl = process.env.API_URL;
 
 export const signUp = async (userData) => {
   try {
