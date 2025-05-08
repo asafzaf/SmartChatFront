@@ -1,8 +1,9 @@
 import { io } from "socket.io-client";
-import { basicConfig } from "../../../etc/secrets/config.js";
 import setupConnectionHandlers from "./connectionHandlers.js";
 import setupChatHandlers from "./chatHandlers.js";
 import setupMessageHandlers from "./messageHandlers.js";
+
+const apiUrl = process.env.apiUrl;
 
 /**
  * Initialize and configure Socket.io connection
@@ -29,7 +30,7 @@ const initializeSocket = (
   console.log("Initializing Socket.io connection...");
   console.log("User ID:", userId);
 
-  const socket = io(basicConfig.apiUrl, {
+  const socket = io(apiUrl, {
     transports: ["websocket"],
     reconnectionAttempts: 5,
     reconnectionDelay: 1000,

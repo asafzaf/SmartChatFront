@@ -3,12 +3,12 @@ import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatList from "../components/chat/ChatList";
 import logo from "../assets/logo.png";
-import { getChatList } from "../api/chat";
+import { getChatList, deleteChat } from "../api/chat";
 import {
   initializeSocket,
   joinChatRoom,
   sendMessageToExistingChat,
-  createNewChat
+  createNewChat,
 } from "../handlers/socket/socket";
 
 function AppContainer() {
@@ -16,14 +16,13 @@ function AppContainer() {
   const [messages, setMessages] = useState([]);
   const [chatList, setChatList] = useState([]);
   const [selectedChatId, setSelectedChatId] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [loadingChatList, setLoadingChatList] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true); // Flag to indicate if it's a new chat
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
-  // Socket.io reference
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
@@ -33,7 +32,7 @@ function AppContainer() {
     const initSocket = async () => {
       try {
         setLoadingMessages(true);
-        
+
         // Initialize Socket.io with all the state setters it needs
         socketRef.current = initializeSocket(
           userId,
@@ -62,11 +61,11 @@ function AppContainer() {
     const initChats = async () => {
       console.log("Loading chat list...");
       setLoadingChatList(true);
-      
+
       try {
         const chatlist = await getChatList(userId);
         console.log("Chat list received:", chatlist);
-        
+
         if (chatlist.error) {
           console.error("Error fetching chat list:", chatlist.error);
         } else {
@@ -89,7 +88,7 @@ function AppContainer() {
   // Join chat room when selectedChatId changes
   useEffect(() => {
     if (!socketRef.current || !userId || !selectedChatId) return;
-    
+
     joinChatRoom(socketRef.current, selectedChatId, setLoadingMessages);
   }, [userId, selectedChatId]);
 
@@ -146,6 +145,30 @@ function AppContainer() {
     setWaitingForResponse(false); // Reset waiting state
   };
 
+  const handleDeleteChat = async (chatIdToDelete) => {
+    if (!chatIdToDelete) return;
+
+    try {
+      const res = await deleteChat(chatIdToDelete);
+      if (res.error) {
+        console.error("Failed to delete chat:", res.error);
+        return;
+      }
+
+      setChatList((prevList) =>
+        prevList.filter((chat) => chat._id !== chatIdToDelete)
+      );
+
+      if (selectedChatId === chatIdToDelete) {
+        setMessages([]);
+        setSelectedChatId(null);
+        setIsNewChat(true);
+      }
+    } catch (err) {
+      console.error("Error deleting chat:", err);
+    }
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -169,6 +192,7 @@ function AppContainer() {
             onSelectChat={handleChatSelect}
             selectedChatId={selectedChatId}
             onCreateChat={setNewChatMode}
+            onDeleteChat={handleDeleteChat}
           />
         </div>
         <div className="app-content">
