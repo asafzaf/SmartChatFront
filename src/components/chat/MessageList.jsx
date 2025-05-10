@@ -1,7 +1,16 @@
+import { useEffect, useRef } from "react";
 import MessageComponent from "./MessageComponent";
 import LoadingSpinner from "../general/LoadingSpinner";
 
 function MessageList({ messages, currentUser, loading, isNewChat }) {
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
     <div className="message-list">
       {loading ? (
@@ -11,13 +20,16 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
           No messages yet. Start a conversation!
         </div>
       ) : (
-        messages.map((msg, index) => (
-          <MessageComponent
-            key={`${msg._id}-${index}`}
-            message={msg}
-            currentUser={currentUser}
-          />
-        ))
+        <>
+          {messages.map((msg, index) => (
+            <MessageComponent
+              key={`${msg._id}-${index}`}
+              message={msg}
+              currentUser={currentUser}
+            />
+          ))}
+          <div ref={bottomRef} />
+        </>
       )}
     </div>
   );
