@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { IoMdMail } from "react-icons/io";
 
 function ChatList({
   onSelectChat,
@@ -35,24 +34,21 @@ function ChatList({
               onMouseEnter={() => setHoveredChatId(chat._id)}
               onMouseLeave={() => setHoveredChatId(null)}
             >
-              {chat.hasNewMessages && ( // TO_ELIYA: add new message icon
-                <IoMdMail className="new-message-icon" title="New messages" color="red" />
-              )}
               <button
                 onClick={() => onSelectChat(chat._id)}
-                className={`${
+                className={`chat-btn-wrapper ${
                   chat._id === selectedChatId ? "selected-chat-btn" : "chat-btn"
                 }`}
               >
+                {chat.hasNewMessages && <span className="red-dot" />}
                 {chat.title || `Chat ${index + 1}`}
+                {hoveredChatId === chat._id && (
+                  <FaTrash
+                    className="trash-icon"
+                    onClick={() => setChatToDelete(chat)}
+                  />
+                )}
               </button>
-
-              {hoveredChatId === chat._id && (
-                <FaTrash
-                  className="trash-icon"
-                  onClick={() => setChatToDelete(chat)}
-                />
-              )}
             </div>
           ))}
         </div>
