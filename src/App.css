@@ -532,3 +532,18 @@ button:active {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.chat-btn-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.red-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #3498db;
+  border-radius: 50%;
+}

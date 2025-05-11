@@ -89,7 +89,12 @@ function AppContainer() {
   useEffect(() => {
     if (!socketRef.current || !userId || !selectedChatId) return;
 
-    joinChatRoom(socketRef.current, selectedChatId, setLoadingMessages);
+    joinChatRoom(
+      socketRef.current,
+      selectedChatId,
+      setChatList,
+      setLoadingMessages
+    );
   }, [userId, selectedChatId]);
 
   const handleSend = async (prompt) => {

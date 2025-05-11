@@ -36,19 +36,19 @@ function ChatList({
             >
               <button
                 onClick={() => onSelectChat(chat._id)}
-                className={`${
+                className={`chat-btn-wrapper ${
                   chat._id === selectedChatId ? "selected-chat-btn" : "chat-btn"
                 }`}
               >
+                {chat.hasNewMessages && <span className="red-dot" />}
                 {chat.title || `Chat ${index + 1}`}
+                {hoveredChatId === chat._id && (
+                  <FaTrash
+                    className="trash-icon"
+                    onClick={() => setChatToDelete(chat)}
+                  />
+                )}
               </button>
-
-              {hoveredChatId === chat._id && (
-                <FaTrash
-                  className="trash-icon"
-                  onClick={() => setChatToDelete(chat)}
-                />
-              )}
             </div>
           ))}
         </div>
