@@ -79,7 +79,7 @@ h2 {
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0px !important;
   color: #555;
   font-size: 14px;
 }
@@ -592,7 +592,8 @@ label {
 }
 
 .model-filed {
-  margin-bottom: 15px;
+  margin-bottom: 25px;
+  margin-top: 25px;
 }
 
 .model-files-secondary {
@@ -654,4 +655,9 @@ label {
 
 .open-form-btn:hover {
   background-color: #2f8bc9;
+}
+
+.rating-label {
+  font-size: 0.9em;
+  color: #555;
 }
