@@ -77,14 +77,17 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
           <div ref={bottomRef} />
         </>
       )}
-
+      {/* Feedback Model Form */}
       {selectedMessage && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Chat Feedback</h2>
             <form onSubmit={handleSubmitForm}>
               <div className="model-filed">
-                <label>Rate the response from 1 to 10:</label>
+                <label>How would you rate this answer? </label>
+                <label className="rating-label">
+                  (1 = very bad, 10 = very good)
+                </label>
                 <input
                   className="rating-input"
                   type="number"
@@ -93,12 +96,11 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
                   value={formData.rating}
                   name="rating"
                   onChange={handleChange}
-                  placeholder="Enter a number between 1 and 10"
                   required
                 />
               </div>
               <div className="model-filed">
-                <label>Add free text feedback:</label>
+                <label>Any feedback you'd like to share? (optional)</label>
                 <textarea
                   value={formData.qualitative}
                   name="qualitative"
@@ -107,7 +109,7 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
                 />
               </div>
               <div className="model-filed model-files-secondary">
-                <label>Are there enough examples?</label>
+                <label>Were there enough examples?</label>
                 <select
                   name="examplesEnough"
                   value={formData.interactionDetails.examplesEnough}
@@ -121,7 +123,7 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
                 </select>
               </div>
               <div className="model-filed model-files-secondary">
-                <label>How is the level of detail?</label>
+                <label>Was the answer detailed enough?</label>
                 <select
                   name="detailLevel"
                   value={formData.interactionDetails.detailLevel}
@@ -130,12 +132,12 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
                   <option value="" disabled hidden>
                     -- Select --
                   </option>
-                  <option value="too_concise">Too Concise</option>
-                  <option value="too_detailed">Too Detailed</option>
+                  <option value="too_concise">Yes</option>
+                  <option value="too_detailed">No</option>
                 </select>
               </div>
               <div className="model-filed model-files-secondary">
-                <label>Is the answer clear ?</label>
+                <label>Was the answer clear?</label>
                 <select
                   name="clarity"
                   value={formData.interactionDetails.clarity}
@@ -149,22 +151,9 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
                 </select>
               </div>
               <div className="model-filed model-files-secondary">
-                <label>Which tone do you prefer?</label>
-                <select
-                  name="tone"
-                  value={formData.interactionDetails.tone}
-                  onChange={handleChange}
-                >
-                  <option value="" disabled hidden>
-                    -- Select --
-                  </option>
-                  <option value="formal">Formal</option>
-                  <option value="casual">Casual</option>
-                  <option value="neutral">Neutral</option>
-                </select>
-              </div>
-              <div className="model-filed model-files-secondary">
-                <label>How was the length of the answer?</label>
+                <label>
+                  Was it too long? Would you prefer something shorter?{" "}
+                </label>
                 <select
                   name="length"
                   value={formData.interactionDetails.length}
