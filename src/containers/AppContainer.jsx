@@ -1,7 +1,9 @@
+import { updateUserPreferences } from "../api/user";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatList from "../components/chat/ChatList";
+import UserPreferencesModal from "../components/general/UserPreferencesModal";
 import logo from "../assets/logo.png";
 import { getChatList, deleteChat } from "../api/chat";
 import {
@@ -22,7 +24,7 @@ function AppContainer() {
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true); // Flag to indicate if it's a new chat
   // const [error, setError] = useState(null);
-
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
@@ -183,6 +185,9 @@ function AppContainer() {
           </span>
           <img src={logo} alt="Logo" className="app-logo" />
           <div className="user-info">
+            <button className="preferences-btn" onClick={() => setShowPreferencesModal(true)}>
+              Settings
+            </button>
             <button className="logout-btn" onClick={logout}>
               Logout
             </button>
@@ -211,6 +216,42 @@ function AppContainer() {
           />
         </div>
       </main>
+      {showPreferencesModal && (
+        <UserPreferencesModal
+          currentPreferences={currentUser.data.user.preferences}
+          onSave={async (prefs) => {
+            try {
+              const userId = currentUser.data.user._id;
+          
+              const payload = { ...prefs, userId };
+          
+              console.log("Sending preferences to server:", payload);
+          
+              await updateUserPreferences(payload, currentUser.token); 
+          
+              console.log("Preferences updated successfully");
+          
+              const updated = {
+                ...currentUser,
+                data: {
+                  ...currentUser.data,
+                  user: {
+                    ...currentUser.data.user,
+                    preferences: prefs, 
+                  },
+                },
+              };
+              localStorage.setItem("user", JSON.stringify(updated));
+              setShowPreferencesModal(false);
+              window.location.reload(); 
+          
+            } catch (err) {
+              console.error("Failed to update preferences:", err);
+            }
+          }}          
+          onClose={() => setShowPreferencesModal(false)}
+        />
+      )}
     </div>
   );
 }
