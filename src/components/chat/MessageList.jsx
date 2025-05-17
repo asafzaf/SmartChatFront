@@ -2,7 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import MessageComponent from "./MessageComponent";
 import LoadingSpinner from "../general/LoadingSpinner";
 
-function MessageList({ messages, currentUser, loading, isNewChat }) {
+import { sendFeedback } from "../../api/feedback.js";
+
+function MessageList({
+  messages,
+  currentUser,
+  loading,
+  isNewChat,
+  onFeedback,
+}) {
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [formData, setFormData] = useState({
     rating: 5,
@@ -31,9 +39,10 @@ function MessageList({ messages, currentUser, loading, isNewChat }) {
     setSelectedMessage(null);
   };
 
-  const handleSubmitForm = (e) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
     console.log("Form Submitted:", formData);
+    await onFeedback(formData);
     setSelectedMessage(null);
   };
 
