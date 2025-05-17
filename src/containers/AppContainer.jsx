@@ -10,6 +10,7 @@ import {
   sendMessageToExistingChat,
   createNewChat,
 } from "../handlers/socket/socket";
+import { sendFeedback } from "../api/feedback.js";
 
 function AppContainer() {
   const { currentUser, logout } = useAuth();
@@ -174,6 +175,21 @@ function AppContainer() {
     }
   };
 
+  const handleFeedback = async (feedback) => {
+    if (!userId || !selectedChatId) return;
+
+    try {
+      const res = await sendFeedback(userId, selectedChatId, feedback);
+      if (res.error) {
+        console.error("Failed to send feedback:", res.error);
+        return;
+      }
+      console.log("Feedback sent successfully:", res.data);
+    } catch (err) {
+      console.error("Error sending feedback:", err);
+    }
+  }
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -204,6 +220,7 @@ function AppContainer() {
           <ChatWindow
             messages={messages}
             onSend={handleSend}
+            onFeedback={handleFeedback}
             loading={loadingMessages}
             userData={currentUser.data.user}
             waitingForResponse={waitingForResponse}
