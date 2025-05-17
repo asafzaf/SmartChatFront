@@ -184,7 +184,7 @@ function AppContainer() {
         console.error("Failed to send feedback:", res.error);
         return;
       }
-      console.log("Feedback sent successfully:", res.data);
+      console.log("Feedback sent successfully:", res);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }
