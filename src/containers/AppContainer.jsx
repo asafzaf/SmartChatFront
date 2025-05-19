@@ -1,7 +1,9 @@
+// import { updateUserPreferences } from "../api/user";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatList from "../components/chat/ChatList";
+import UserPreferencesModal from "../components/general/UserPreferencesModal";
 import logo from "../assets/logo.png";
 import { getChatList, deleteChat } from "../api/chat";
 import {
@@ -23,10 +25,12 @@ function AppContainer() {
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true); // Flag to indicate if it's a new chat
   // const [error, setError] = useState(null);
-
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
+
+  // console.log("currentUser:", currentUser);
 
   // Initialize Socket.io connection and load chats on initial load
   useEffect(() => {
@@ -199,6 +203,12 @@ function AppContainer() {
           </span>
           <img src={logo} alt="Logo" className="app-logo" />
           <div className="user-info">
+            <button
+              className="preferences-btn"
+              onClick={() => setShowPreferencesModal(true)}
+            >
+              Settings
+            </button>
             <button className="logout-btn" onClick={logout}>
               Logout
             </button>
@@ -228,6 +238,12 @@ function AppContainer() {
           />
         </div>
       </main>
+      {showPreferencesModal && (
+        <UserPreferencesModal
+          data={currentUser?.data?.user}
+          onClose={() => setShowPreferencesModal(false)}
+        />
+      )}
     </div>
   );
 }
