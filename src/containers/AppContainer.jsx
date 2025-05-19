@@ -1,4 +1,4 @@
-import { updateUserPreferences } from "../api/user";
+// import { updateUserPreferences } from "../api/user";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
@@ -28,6 +28,8 @@ function AppContainer() {
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
+
+  // console.log("currentUser:", currentUser);
 
   // Initialize Socket.io connection and load chats on initial load
   useEffect(() => {
@@ -185,7 +187,10 @@ function AppContainer() {
           </span>
           <img src={logo} alt="Logo" className="app-logo" />
           <div className="user-info">
-            <button className="preferences-btn" onClick={() => setShowPreferencesModal(true)}>
+            <button
+              className="preferences-btn"
+              onClick={() => setShowPreferencesModal(true)}
+            >
               Settings
             </button>
             <button className="logout-btn" onClick={logout}>
@@ -218,37 +223,7 @@ function AppContainer() {
       </main>
       {showPreferencesModal && (
         <UserPreferencesModal
-          currentPreferences={currentUser.data.user.preferences}
-          onSave={async (prefs) => {
-            try {
-              const userId = currentUser.data.user._id;
-          
-              const payload = { ...prefs, userId };
-          
-              console.log("Sending preferences to server:", payload);
-          
-              await updateUserPreferences(payload, currentUser.token); 
-          
-              console.log("Preferences updated successfully");
-          
-              const updated = {
-                ...currentUser,
-                data: {
-                  ...currentUser.data,
-                  user: {
-                    ...currentUser.data.user,
-                    preferences: prefs, 
-                  },
-                },
-              };
-              localStorage.setItem("user", JSON.stringify(updated));
-              setShowPreferencesModal(false);
-              window.location.reload(); 
-          
-            } catch (err) {
-              console.error("Failed to update preferences:", err);
-            }
-          }}          
+          data={currentUser?.data?.user}
           onClose={() => setShowPreferencesModal(false)}
         />
       )}
