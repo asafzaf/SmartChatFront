@@ -41,7 +41,7 @@ function ChatList({
                 }`}
               >
                 {chat.hasNewMessages && <span className="red-dot" />}
-                {chat.title || `Chat ${index + 1}`}
+                {chat.subject?.slice(0, 50) || `Chat ${index + 1}`}
                 {hoveredChatId === chat._id && (
                   <FaTrash
                     className="trash-icon"
