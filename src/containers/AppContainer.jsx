@@ -14,6 +14,30 @@ import {
 } from "../handlers/socket/socket";
 import { sendFeedback } from "../api/feedback.js";
 
+function generateSubjectFromPrompt(prompt) {
+  // common leading phrases to remove from the prompt
+  const stopWords = [
+    "hey", "hi", "hello", "can you", "could you", "please", "tell me", "show me",
+    "i want to know", "would you", "explain", "what is", "who is", "how does", "define", "give me"
+  ];
+
+  let cleaned = prompt.toLowerCase();
+  // remove common phrases
+  for (const phrase of stopWords) {
+    if (cleaned.startsWith(phrase)) {
+      cleaned = cleaned.replace(phrase, '').trim();
+      break;
+    }
+  }
+
+  // remove punctuation characters (?, !, .)
+  cleaned = cleaned.replace(/[?!.]/g, '');
+  // limit to first 5 words
+  const words = cleaned.split(/\s+/).slice(0, 5).join(' ');
+  // capitalize first letter of the result
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
 function AppContainer() {
   const { currentUser, logout } = useAuth();
   const [messages, setMessages] = useState([]);
@@ -107,11 +131,12 @@ function AppContainer() {
 
     try {
       if (isNewChat) {
-        // Create a new chat using the socket handler
+        const subject = generateSubjectFromPrompt(prompt);
         createNewChat(
           socketRef.current,
           userId,
           prompt,
+          subject,
           setLoadingMessages,
           setMessages,
           setWaitingForResponse
