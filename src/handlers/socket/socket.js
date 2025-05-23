@@ -150,6 +150,7 @@ const createNewChat = (
   socket,
   userId,
   message,
+  subject,
   setLoadingMessages,
   setMessages,
   setWaitingForResponse
@@ -163,6 +164,7 @@ const createNewChat = (
     userId: userId,
     socketId: socket.id,
     prompt: message,
+    subject,
   };
 
   socket.emit("create_chat", data);
