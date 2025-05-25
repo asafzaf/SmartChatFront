@@ -95,7 +95,21 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: none;
+}
+
+select {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+select:focus {
+  outline: none;
+  border-color: none;
 }
 
 .btn-submit {
@@ -333,6 +347,9 @@ button:active {
   font-size: 15px;
   width: 150px;
 }
+.start-chat-btn:hover {
+  background-color: #cecece;
+}
 
 .no-messages {
   text-align: center;
@@ -410,10 +427,10 @@ button:active {
   background-size: 16px;
 }
 
-.form-select:focus {
+/* .form-select:focus {
   outline: none;
   border-color: #3498db;
-}
+} */
 
 .form-buttons {
   display: flex;
@@ -580,7 +597,7 @@ button:active {
 .modal-content {
   background: #fff;
   padding: 20px;
-  width: 80%;
+  width: 60rem;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
@@ -675,15 +692,6 @@ label {
   z-index: 999;
 }
 
-.modal-content {
-  background: #fff;
-  padding: 25px;
-  width: 90%;
-  max-width: 400px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
 .modal-content h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -691,6 +699,11 @@ label {
 }
 
 .form-group {
+  margin-bottom: 20px;
+  /* width: 60rem; */
+}
+
+.form-sub-title {
   margin-bottom: 20px;
 }
 
@@ -702,7 +715,6 @@ label {
 }
 
 .form-group select {
-  width: 100%;
   padding: 10px;
   font-size: 14px;
   border-radius: 6px;
@@ -715,6 +727,11 @@ label {
   gap: 10px;
 }
 
+.form-column {
+  /* background-color: aqua; */
+  width: 50%;
+}
+
 .send-btn {
   background-color: #3498db;
   color: white;
@@ -722,6 +739,7 @@ label {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  width: 6.5rem;
 }
 
 .send-btn:hover {
@@ -734,6 +752,7 @@ label {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  width: 6.5rem;
 }
 
 .cancel-btn:hover {
@@ -753,4 +772,5 @@ label {
 .preferences-btn:hover {
   background-color: #f1f1f1;
   color: black;
+  border-color: #ccc;
 }
