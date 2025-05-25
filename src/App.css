@@ -346,7 +346,7 @@ button:active {
   padding-block-end: calc(0.625rem);
   padding-inline-start: calc(1.25rem);
   padding-inline-end: calc(1.25rem);
-
+  color: #333;
   border-radius: 1.5rem;
   min-width: 200px;
   max-width: 80%;
