@@ -68,10 +68,13 @@ function UserPreferencesModal({ data, onClose }) {
       <div className="modal-content">
         <h2>User Settings</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-columns" style={{ display: "flex", gap: "2rem" }}>
+          <div
+            className="form-columns"
+            style={{ display: "flex", gap: "2rem" }}
+          >
             {/* Left Column: Information */}
-            <div style={{ flex: 1 }}>
-              <h3>Information</h3>
+            <div className="form-column">
+              <h3 className="form-sub-title">Information</h3>
               <div className="form-group">
                 <label>First Name</label>
                 <input
@@ -80,6 +83,8 @@ function UserPreferencesModal({ data, onClose }) {
                   value={formData.first_name}
                   onChange={handleChange}
                 />
+              </div>
+              <div className="form-group">
                 <label>Last Name</label>
                 <input
                   type="text"
@@ -89,15 +94,13 @@ function UserPreferencesModal({ data, onClose }) {
                 />
               </div>
               <div className="form-group">
-                <label>
-                  Email:
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </label>
+                <label>Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
               <div className="form-group">
                 <label>
@@ -107,9 +110,11 @@ function UserPreferencesModal({ data, onClose }) {
                     name="password"
                     value={newPassword}
                     placeholder="Leave blank to keep current password"
-                    onChange={e => setNewPassword(e.target.value)}
+                    onChange={(e) => setNewPassword(e.target.value)}
                   />
                 </label>
+              </div>
+              <div className="form-group">
                 <label>
                   Confirm Password:
                   <input
@@ -117,19 +122,21 @@ function UserPreferencesModal({ data, onClose }) {
                     name="confirmPassword"
                     value={confirmPassword}
                     placeholder="Leave blank to keep current password"
-                    onChange={e => setConfirmPassword(e.target.value)}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </label>
               </div>
               <div className="form-group">
-                <label>
-                  Role:
-                  <select name="role" value={formData.role} onChange={handleChange}>
-                    <option value="Student">Student</option>
-                    <option value="Lecturer">Lecturer</option>
-                    <option value="Software Engineer">Software Engineer</option>
-                  </select>
-                </label>
+                <label>Role:</label>
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                >
+                  <option value="Student">Student</option>
+                  <option value="Lecturer">Lecturer</option>
+                  <option value="Software Engineer">Software Engineer</option>
+                </select>
               </div>
               <div className="form-group">
                 <label>
@@ -147,8 +154,8 @@ function UserPreferencesModal({ data, onClose }) {
               </div>
             </div>
             {/* Right Column: Preferences */}
-            <div style={{ flex: 1 }}>
-              <h3>Preferences</h3>
+            <div className="form-column">
+              <h3 className="form-sub-title">Preferences</h3>
               <div className="form-group">
                 <label>Answer Style</label>
                 <select
@@ -187,6 +194,7 @@ function UserPreferencesModal({ data, onClose }) {
               </div>
             </div>
           </div>
+          {/* Form buttons */}
           <div className="modal-actions" style={{ marginTop: "2rem" }}>
             <button type="submit" className="send-btn">
               Save
