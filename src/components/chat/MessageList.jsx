@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import MessageComponent from "./MessageComponent";
 import LoadingSpinner from "../general/LoadingSpinner";
-
-import { sendFeedback } from "../../api/feedback.js";
+// import { sendFeedback } from "../../api/feedback.js";
 
 function MessageList({
   messages,
@@ -12,6 +11,7 @@ function MessageList({
   onFeedback,
 }) {
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [feedbackGivenMessages, setFeedbackGivenMessages] = useState([]);
   const [formData, setFormData] = useState({
     rating: 5,
     qualitative: "",
@@ -43,6 +43,7 @@ function MessageList({
     e.preventDefault();
     console.log("Form Submitted:", formData);
     await onFeedback(formData);
+    setFeedbackGivenMessages((prev) => [...prev, selectedMessage._id]);
     setSelectedMessage(null);
   };
 
@@ -81,6 +82,7 @@ function MessageList({
               currentUser={currentUser}
               handleOpenForm={handleOpenForm}
               index={index}
+              feedbackGivenMessages={feedbackGivenMessages}
             />
           ))}
           <div ref={bottomRef} />
