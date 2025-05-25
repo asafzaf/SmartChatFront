@@ -20,12 +20,12 @@ const MessageComponent = ({ message, currentUser, handleOpenForm, index }) => {
           </div>
         )}
 
-        {index === 1 && (
+        {index % 2 === 1 && (
           <button
             className="open-form-btn"
             onClick={() => handleOpenForm(message)}
           >
-            Give Feedback
+            Want to Share Feedback?
           </button>
         )}
       </div>
