@@ -346,7 +346,7 @@ button:active {
   padding-block-end: calc(0.625rem);
   padding-inline-start: calc(1.25rem);
   padding-inline-end: calc(1.25rem);
-
+  color: #333;
   border-radius: 1.5rem;
   min-width: 200px;
   max-width: 80%;
@@ -643,9 +643,9 @@ label {
 }
 
 .open-form-btn {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 6px 12px;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   border-radius: 10px;
   background-color: #3498db;
