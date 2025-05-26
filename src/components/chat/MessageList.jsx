@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import MessageComponent from "./MessageComponent";
 import LoadingSpinner from "../general/LoadingSpinner";
-// import { sendFeedback } from "../../api/feedback.js";
+import { markMessageFeedbackGiven } from "../../api/message.js";
 
 function MessageList({
   messages,
@@ -11,7 +11,7 @@ function MessageList({
   onFeedback,
 }) {
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [feedbackGivenMessages, setFeedbackGivenMessages] = useState([]);
+  const [localMessages, setLocalMessages] = useState(messages);
   const [formData, setFormData] = useState({
     rating: 5,
     qualitative: "",
@@ -31,6 +31,10 @@ function MessageList({
     }
   }, [messages]);
 
+  useEffect(() => {
+    setLocalMessages(messages);
+  }, [messages]);
+
   const handleOpenForm = (message) => {
     setSelectedMessage(message);
   };
@@ -42,9 +46,21 @@ function MessageList({
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     console.log("Form Submitted:", formData);
-    await onFeedback(formData);
-    setFeedbackGivenMessages((prev) => [...prev, selectedMessage._id]);
-    setSelectedMessage(null);
+    try {
+      await onFeedback(formData);
+      if (selectedMessage?._id) {
+        await markMessageFeedbackGiven(selectedMessage._id);
+      }
+      setLocalMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg._id === selectedMessage._id ? { ...msg, gotFeedback: true } : msg
+        )
+      );
+
+      setSelectedMessage(null);
+    } catch (err) {
+      console.error("Error submitting feedback and marking message:", err);
+    }
   };
 
   const handleChange = (e) => {
@@ -75,14 +91,13 @@ function MessageList({
         </div>
       ) : (
         <>
-          {messages.map((msg, index) => (
+          {localMessages.map((msg, index) => (
             <MessageComponent
               key={`${msg._id}-${index}`}
               message={msg}
               currentUser={currentUser}
               handleOpenForm={handleOpenForm}
               index={index}
-              feedbackGivenMessages={feedbackGivenMessages}
             />
           ))}
           <div ref={bottomRef} />
