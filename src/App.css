@@ -473,7 +473,7 @@ button:active {
 }
 
 .bot-message pre {
-  background-color: #f4f4f4;
+  background-color: #f8f8f8;
   padding: 10px;
   border-radius: 10px;
   overflow-x: auto;
@@ -483,6 +483,7 @@ button:active {
   font-family: monospace;
   padding: 2px 4px;
   border-radius: 4px;
+  color: #424c80;
 }
 
 .bot-message ul {
