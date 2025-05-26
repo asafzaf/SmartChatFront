@@ -18,6 +18,7 @@ function AuthContainer() {
   const handleLogin = async (email, password) => {
     const result = await login(email, password);
     if (!result.success) {
+      console.error("Login failed:", result);
       setError(result.error);
     }
   };
