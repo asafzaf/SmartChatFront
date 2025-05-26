@@ -696,6 +696,9 @@ label {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+  font-size: 28px;
+  font-weight: bold;
+  padding-bottom: 20px;
 }
 
 .form-group {
@@ -721,10 +724,18 @@ label {
   border: 1px solid #ddd;
 }
 
-.modal-actions {
+.form-group select:hover {
+  border-color: #3498db;
+}
+.form-group input:hover {
+  border-color: #3498db;
+}
+
+.feedback-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  padding-right: 40px;
 }
 
 .form-column {
@@ -773,4 +784,10 @@ label {
   background-color: #f1f1f1;
   color: black;
   border-color: #ccc;
+}
+
+.form-column h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
 }
