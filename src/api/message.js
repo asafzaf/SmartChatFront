@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 export const getMessages = async (chatId, userId) => {
   try {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -21,7 +20,7 @@ export const createNewMessage = async (userId, chatId, sender, text) => {
   // - chatId
   // - sender
   // - text
-  
+
   try {
     const apiUrl = import.meta.env.VITE_API_URL;
     const response = await axios.post(`${apiUrl}/api/message/`, {
@@ -36,6 +35,17 @@ export const createNewMessage = async (userId, chatId, sender, text) => {
       "An error occurred while fetching data to get messages - ",
       error
     );
+    throw error;
+  }
+};
+
+export const markMessageFeedbackGiven = async (messageId) => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const response = await axios.put(`${apiUrl}/api/message/${messageId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to mark message feedback given:", error);
     throw error;
   }
 };
