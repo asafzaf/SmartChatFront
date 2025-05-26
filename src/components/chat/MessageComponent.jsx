@@ -2,14 +2,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-const MessageComponent = ({
-  message,
-  currentUser,
-  handleOpenForm,
-  index,
-  feedbackGivenMessages,
-}) => {
-  const hasGivenFeedback = feedbackGivenMessages.includes(message._id);
+const MessageComponent = ({ message, currentUser, handleOpenForm, index }) => {
   return (
     <div
       className={`message-${
@@ -27,7 +20,7 @@ const MessageComponent = ({
           </div>
         )}
 
-        {index % 2 === 1 && !hasGivenFeedback && (
+        {index % 2 === 1 && !message.gotFeedback && (
           <button
             className="open-form-btn"
             onClick={() => handleOpenForm(message)}
