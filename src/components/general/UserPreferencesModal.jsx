@@ -73,8 +73,8 @@ function UserPreferencesModal({ data, onClose }) {
             style={{ display: "flex", gap: "2rem" }}
           >
             {/* Left Column: Information */}
-            <div className="form-column">
-              <h3 className="form-sub-title">Information</h3>
+            <div className="form-column" style={{ paddingLeft: "20px" }}>
+              <h3 className="form-sub-title">Personal Information</h3>
               <div className="form-group">
                 <label>First Name</label>
                 <input
@@ -126,6 +126,10 @@ function UserPreferencesModal({ data, onClose }) {
                   />
                 </label>
               </div>
+            </div>
+            {/* Right Column: Preferences */}
+            <div className="form-column">
+              <h3 className="form-sub-title">Professional Background</h3>
               <div className="form-group">
                 <label>Role:</label>
                 <select
@@ -152,10 +156,7 @@ function UserPreferencesModal({ data, onClose }) {
                   </select>
                 </label>
               </div>
-            </div>
-            {/* Right Column: Preferences */}
-            <div className="form-column">
-              <h3 className="form-sub-title">Preferences</h3>
+              <h3 className="form-sub-title">Response Preferences</h3>
               <div className="form-group">
                 <label>Answer Style</label>
                 <select
@@ -195,7 +196,7 @@ function UserPreferencesModal({ data, onClose }) {
             </div>
           </div>
           {/* Form buttons */}
-          <div className="modal-actions" style={{ marginTop: "2rem" }}>
+          <div className="feedback-modal-actions" style={{ marginTop: "2rem" }}>
             <button type="submit" className="send-btn">
               Save
             </button>
