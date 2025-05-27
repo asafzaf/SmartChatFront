@@ -33,10 +33,9 @@ function SignInForm({ handleFlip, onSubmit, error }) {
   return (
     <>
       <h2>Sign In</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="sign-in-form" onSubmit={handleSubmit}>
         {error && <div className="error-message">{error}</div>}
-
-        <div className="form-group">
+        <div className="sign-in-input">
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -46,10 +45,10 @@ function SignInForm({ handleFlip, onSubmit, error }) {
             onChange={handleChange}
             required
             disabled={loading}
+            style={{ textAlign: "center" }}
           />
         </div>
-
-        <div className="form-group">
+        <div className="sign-in-input">
           <label htmlFor="password">Password</label>
           <input
             type="password"
@@ -59,16 +58,18 @@ function SignInForm({ handleFlip, onSubmit, error }) {
             onChange={handleChange}
             required
             disabled={loading}
+            style={{ textAlign: "center" }}
           />
         </div>
-
-        <FormButton
-          text={loading ? "Signing In..." : "Sign In"}
-          disabled={loading}
-        />
-        {loading && <LoadingSpinner />}
+        <div style={{ marginTop: "20px" }}>
+          <FormButton
+            text={loading ? "Signing In..." : "Sign In"}
+            disabled={loading}
+          />
+          {loading && <LoadingSpinner />}
+        </div>
       </form>
-      <p>
+      <p className="flip-text">
         Don't have an account?{" "}
         <button onClick={handleFlip} className="flip-btn" disabled={loading}>
           Sign Up
