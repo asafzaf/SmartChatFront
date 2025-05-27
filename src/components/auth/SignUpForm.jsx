@@ -1,80 +1,79 @@
-// src/components/SignUpForm.jsx
-import { useState } from 'react';
-import FormButton from './FormButton';
+import { useState } from "react";
+import FormButton from "./FormButton";
 
 function SignUpForm({ handleFlip, onSubmit, error }) {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    first_name: '',
-    last_name: '',
-    role: 'Student', // Default role
+    email: "",
+    password: "",
+    confirmPassword: "",
+    first_name: "",
+    last_name: "",
+    role: "Student", // Default role
     preferences: {
-      answerStyle: 'Concise',
-      exampleCount: 'One',
-      tone: 'Neutral'
+      answerStyle: "Concise",
+      exampleCount: "One",
+      tone: "Neutral",
     },
-    expertiseLevel: 'Beginner'
+    expertiseLevel: "Beginner",
   });
-  const [validationError, setValidationError] = useState('');
+  const [validationError, setValidationError] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // 1: Basic, 2: Profile, 3: Preferences
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    
+
     // Handle nested preferences objects
-    if (id.includes('.')) {
-      const [parent, child] = id.split('.');
+    if (id.includes(".")) {
+      const [parent, child] = id.split(".");
       setFormData({
         ...formData,
         [parent]: {
           ...formData[parent],
-          [child]: value
-        }
+          [child]: value,
+        },
       });
     } else {
       setFormData({
         ...formData,
-        [id]: value
+        [id]: value,
       });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate based on current step
     if (currentStep === 1) {
       // Password validation
       if (formData.password !== formData.confirmPassword) {
-        setValidationError('Passwords do not match');
+        setValidationError("Passwords do not match");
         return;
       }
-      
+
       if (formData.password.length < 6) {
-        setValidationError('Password must be at least 6 characters');
+        setValidationError("Password must be at least 6 characters");
         return;
       }
-      
+
       // Move to profile step
-      setValidationError('');
+      setValidationError("");
       setCurrentStep(2);
       return;
     }
-    
+
     if (currentStep === 2) {
       // Move to preferences step
-      setValidationError('');
+      setValidationError("");
       setCurrentStep(3);
       return;
     }
-    
+
     // Submit complete form data (step 3)
-    setValidationError('');
+    setValidationError("");
     setLoading(true);
-    
+
     // Extract the data to match your mongoose model structure
     const userData = {
       email: formData.email,
@@ -83,9 +82,9 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
       last_name: formData.last_name,
       role: formData.role,
       preferences: formData.preferences,
-      expertiseLevel: formData.expertiseLevel
+      expertiseLevel: formData.expertiseLevel,
     };
-    
+
     await onSubmit(userData);
     setLoading(false);
   };
@@ -108,44 +107,42 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
         return null;
     }
   };
-
   return (
     <>
       <h2>Sign Up</h2>
       {renderStepHeading()}
-      <form onSubmit={handleSubmit}>
+      <form className="sign-up-form" onSubmit={handleSubmit}>
         {error && <div className="error-message">{error}</div>}
-        {validationError && <div className="error-message">{validationError}</div>}
-        
+        {validationError && (
+          <div className="error-message">{validationError}</div>
+        )}
         {currentStep === 1 && (
           // Step 1: Basic form with email and password
           <>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input 
-                type="email" 
-                id="email" 
-                placeholder="Enter your email" 
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
                 required
                 disabled={loading}
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input 
-                type="password" 
-                id="password" 
-                placeholder="Create a password" 
+              <input
+                type="password"
+                id="password"
+                placeholder="Create a password"
                 value={formData.password}
                 onChange={handleChange}
                 required
                 disabled={loading}
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="confirmPassword">Confirm Password</label>
               <input
@@ -160,40 +157,38 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
             </div>
           </>
         )}
-        
+
         {currentStep === 2 && (
           // Step 2: Profile information
           <>
             <div className="form-group">
               <label htmlFor="first_name">First Name</label>
-              <input 
-                type="text" 
-                id="first_name" 
-                placeholder="Enter your first name" 
+              <input
+                type="text"
+                id="first_name"
+                placeholder="Enter your first name"
                 value={formData.first_name}
                 onChange={handleChange}
                 required
                 disabled={loading}
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="last_name">Last Name</label>
-              <input 
-                type="text" 
-                id="last_name" 
-                placeholder="Enter your last name" 
+              <input
+                type="text"
+                id="last_name"
+                placeholder="Enter your last name"
                 value={formData.last_name}
                 onChange={handleChange}
                 required
                 disabled={loading}
               />
             </div>
-            
             <div className="form-group">
               <label htmlFor="role">Role</label>
-              <select 
-                id="role" 
+              <select
+                id="role"
                 value={formData.role}
                 onChange={handleChange}
                 required
@@ -205,11 +200,11 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
                 <option value="Software Engineer">Software Engineer</option>
               </select>
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="expertiseLevel">Expertise Level</label>
-              <select 
-                id="expertiseLevel" 
+              <select
+                id="expertiseLevel"
                 value={formData.expertiseLevel}
                 onChange={handleChange}
                 required
@@ -223,14 +218,14 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
             </div>
           </>
         )}
-        
+
         {currentStep === 3 && (
           // Step 3: Preferences
           <>
             <div className="form-group">
               <label htmlFor="preferences.answerStyle">Answer Style</label>
-              <select 
-                id="preferences.answerStyle" 
+              <select
+                id="preferences.answerStyle"
                 value={formData.preferences.answerStyle}
                 onChange={handleChange}
                 disabled={loading}
@@ -240,11 +235,10 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
                 <option value="Detailed">Detailed</option>
               </select>
             </div>
-            
             <div className="form-group">
               <label htmlFor="preferences.exampleCount">Example Count</label>
-              <select 
-                id="preferences.exampleCount" 
+              <select
+                id="preferences.exampleCount"
                 value={formData.preferences.exampleCount}
                 onChange={handleChange}
                 disabled={loading}
@@ -256,11 +250,10 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
                 <option value="Multiple">Multiple</option>
               </select>
             </div>
-            
             <div className="form-group">
               <label htmlFor="preferences.tone">Tone</label>
-              <select 
-                id="preferences.tone" 
+              <select
+                id="preferences.tone"
                 value={formData.preferences.tone}
                 onChange={handleChange}
                 disabled={loading}
@@ -273,32 +266,32 @@ function SignUpForm({ handleFlip, onSubmit, error }) {
             </div>
           </>
         )}
-        
         <div className="form-buttons">
           {currentStep > 1 && (
-            <button 
-              type="button" 
-              className="btn-secondary" 
+            <button
+              type="button"
+              className="btn-secondary"
               onClick={handleBack}
               disabled={loading}
             >
               Back
             </button>
           )}
-          
-          <FormButton 
+          <FormButton
             text={
-              loading ? "Signing Up..." : 
-              currentStep < 3 ? "Next" : "Complete Sign Up"
-            } 
+              loading
+                ? "Signing Up..."
+                : currentStep < 3
+                ? "Next"
+                : "Complete Sign Up"
+            }
             disabled={loading}
           />
         </div>
       </form>
-      
       {currentStep === 1 && (
-        <p>
-          Already have an account?{' '}
+        <p className="flip-text">
+          Already have an account?{" "}
           <button onClick={handleFlip} className="flip-btn" disabled={loading}>
             Sign In
           </button>
