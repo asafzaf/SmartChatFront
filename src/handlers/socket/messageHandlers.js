@@ -16,9 +16,21 @@ const setupMessageHandlers = (
 
     let sameChat = false;
 
-    const { chatId, botMessage } = data;
+    const { chatId, botMessage, title } = data;
     console.log("Bot response received:", botMessage);
     console.log("ChatId: ", chatId);
+    console.log("Title: ", title);
+
+    if (title) {
+      console.log("Title received in bot response:", data.title);
+
+      console.log("Updating chat title for chatId:", chatId);
+      setChatList((prevChatList) =>
+        prevChatList.map((chat) =>
+          chat._id === chatId ? { ...chat, title: title } : chat
+        )
+      );
+    }
 
     // Remove temporary waiting message and add the actual response
     setMessages((prevMessages) => {
