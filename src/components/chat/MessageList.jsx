@@ -58,6 +58,17 @@ function MessageList({
       );
 
       setSelectedMessage(null);
+      setFormData({
+        rating: 5,
+        qualitative: "",
+        interactionDetails: {
+          examplesEnough: "",
+          detailLevel: "",
+          clarity: "",
+          tone: "",
+          length: "",
+        },
+      });
     } catch (err) {
       console.error("Error submitting feedback and marking message:", err);
     }
