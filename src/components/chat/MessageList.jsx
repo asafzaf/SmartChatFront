@@ -97,9 +97,7 @@ function MessageList({
       {loading ? (
         <LoadingSpinner />
       ) : messages.length === 0 || isNewChat ? (
-        <div className="no-messages">
-          No messages yet. Start a conversation!
-        </div>
+        <div className="no-messages">Start a conversation!</div>
       ) : (
         <>
           {localMessages.map((msg, index) => (
