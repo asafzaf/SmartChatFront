@@ -34,8 +34,11 @@ const setupMessageHandlers = (
 
     // Remove temporary waiting message and add the actual response
     setMessages((prevMessages) => {
+      console.log("Previous messages before update:", prevMessages);
       // Filter out any temporary "typing" messages
       const messagesWithoutTyping = prevMessages.filter((msg) => !msg.isTyping);
+
+      console.log("Current messages without typing:", messagesWithoutTyping);
 
       // Check if the chatId exists in the current messages
       const chatExists = messagesWithoutTyping.some(
