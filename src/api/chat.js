@@ -1,25 +1,18 @@
 import axios from "axios";
-
-
-export const createNewChat = async (userId, socketId, prompt) => {
-  try {
-    const apiUrl = import.meta.env.VITE_API_URL;
-    const response = await axios.post(`${apiUrl}/api/chat`, {
-      userId,
-      socketId,
-      prompt,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error creating new chat:", error);
-    throw error;
-  }
-};
+import { createHeaders, getUserId } from "./api.conf";
 
 export const getChatList = async (userId) => {
   try {
+    if (!userId) {
+      throw new Error("User ID is required to fetch chat list");
+    }
+    const userId = getUserId();
+    const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
-    const response = await axios.get(`${apiUrl}/api/chat/${userId}/list`);
+    const response = await axios.get(`${apiUrl}/api/chat/${userId}/list`, {
+      data: { userId },
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching chat history:", error);
@@ -29,10 +22,17 @@ export const getChatList = async (userId) => {
 
 export const deleteChat = async (chatId) => {
   try {
+    if (!chatId) {
+      throw new Error("Chat ID is required to delete a chat");
+    }
+    const userId = getUserId();
+    const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
     console.log("Enter chat deleting");
-    const res = await axios.delete(`${apiUrl}/api/chat/${chatId}`);
-    console.log("deleting chat:", res.data);
+    const res = await axios.delete(`${apiUrl}/api/chat/${chatId}`, {
+      data: { userId },
+      headers: headers,
+    });
     return res.data;
   } catch (error) {
     console.error("Error deleting chat:", error);

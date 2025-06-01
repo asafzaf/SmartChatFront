@@ -1,25 +1,28 @@
 import axios from "axios";
 
-// export const updateUserPreferences = async (prefs, token) => {
-//   const apiUrl = import.meta.env.VITE_API_URL;
-
-//   const response = await axios.put(`${apiUrl}/api/user/preferences`, prefs, {
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token || ""}`,
-//     },
-//   });
-
-//   return response.data;
-// };
+import { createHeaders } from "./api.conf";
 
 export const updateUser = async (data, userId) => {
   console.log("Updating user preferences:", data, userId);
   try {
+    if (!userId) {
+      throw new Error("User ID is required to update user preferences");
+    }
+    const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
-    const res = await axios.put(`${apiUrl}/api/user/${userId}`, data);
+    const res = await axios.put(
+      `${apiUrl}/api/user/${userId}`,
+      {
+        ...data,
+        userId: userId,
+      },
+      {
+        headers: headers,
+      }
+    );
     return res.data;
   } catch (error) {
-    return { error };
+    console.error("Error updating user preferences:", error);
+    throw error;
   }
 };
