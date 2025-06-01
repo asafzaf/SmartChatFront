@@ -21,27 +21,16 @@ const setupMessageHandlers = (
     console.log("ChatId: ", chatId);
     console.log("Title: ", title);
 
-    if (title) {
-      console.log("Title received in bot response:", data.title);
-
-      console.log("Updating chat title for chatId:", chatId);
-      setChatList((prevChatList) =>
-        prevChatList.map((chat) =>
-          chat._id === chatId ? { ...chat, title: title } : chat
-        )
-      );
-    }
-
     // Remove temporary waiting message and add the actual response
     setMessages((prevMessages) => {
       // Filter out any temporary "typing" messages
       const messagesWithoutTyping = prevMessages.filter((msg) => !msg.isTyping);
-
+      console.log("Current messages without typing:", messagesWithoutTyping);
       // Check if the chatId exists in the current messages
       const chatExists = messagesWithoutTyping.some(
         (msg) => msg.chatId === chatId
       );
-
+      console.log("Chat exists in current messages:", chatExists);
       if (chatExists) {
         sameChat = true;
         // Check if the new message already exists in the previous messages
@@ -60,12 +49,18 @@ const setupMessageHandlers = (
       return messagesWithoutTyping;
     });
 
-    if (!sameChat) {
-      // If the chatId doesn't exist in the current messages, update the chat list
+    if (!sameChat || title) {
+      console.log("## Updating chat list for new messages or title");
       setChatList((prevChatList) =>
-        prevChatList.map((chat) =>
-          chat._id === chatId ? { ...chat, hasNewMessages: true } : chat
-        )
+        prevChatList.map((chat) => {
+          if (chat._id === chatId) {
+            let updatedChat = { ...chat };
+            if (!sameChat) updatedChat.hasNewMessages = true;
+            if (title) updatedChat.title = title;
+            return updatedChat;
+          }
+          return chat;
+        })
       );
     }
 
