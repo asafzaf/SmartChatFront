@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import MessageComponent from "./MessageComponent";
 import LoadingSpinner from "../general/LoadingSpinner";
-import { markMessageFeedbackGiven } from "../../api/message.js";
 
 function MessageList({
   messages,
@@ -49,7 +48,7 @@ function MessageList({
     try {
       await onFeedback(selectedMessage, formData);
       if (selectedMessage?._id) {
-        await markMessageFeedbackGiven(selectedMessage._id);
+        console.log("Message marked as feedback given:", selectedMessage._id);
       }
       setLocalMessages((prevMessages) =>
         prevMessages.map((msg) =>
