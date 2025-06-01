@@ -47,7 +47,7 @@ function MessageList({
     e.preventDefault();
     console.log("Form Submitted:", formData);
     try {
-      await onFeedback(formData);
+      await onFeedback(selectedMessage, formData);
       if (selectedMessage?._id) {
         await markMessageFeedbackGiven(selectedMessage._id);
       }

@@ -179,20 +179,34 @@ function AppContainer() {
     }
   };
 
-  const handleFeedback = async (feedback) => {
+  const handleFeedback = async (message, feedback) => {
     if (!userId || !selectedChatId) return;
-
+    if (!message || !feedback) {
+      console.error("Message or feedback is missing");
+      return;
+    }
+    console.log(
+      "Sending feedback for message:",
+      message,
+      "Feedback:",
+      feedback
+    );
     try {
       const res = await sendFeedback(userId, selectedChatId, feedback);
       if (res.error) {
         console.error("Failed to send feedback:", res.error);
         return;
       }
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg._id === message._id ? { ...msg, gotFeedback: true } : msg
+        )
+      );
       console.log("Feedback sent successfully:", res);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }
-  }
+  };
 
   return (
     <div className="app-container">
