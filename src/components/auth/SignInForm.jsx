@@ -1,4 +1,3 @@
-// src/components/SignInForm.jsx
 import { useState } from "react";
 import FormButton from "./FormButton";
 import LoadingSpinner from "../general/LoadingSpinner";
@@ -22,7 +21,7 @@ function SignInForm({ handleFlip, onSubmit, error }) {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      return; // Form validation is handled by required attributes
+      return;
     }
 
     setLoading(true);

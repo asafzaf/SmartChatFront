@@ -1,4 +1,3 @@
-// src/components/LoadingSpinner.jsx
 function LoadingSpinner() {
   return (
     <div className="loading-container">

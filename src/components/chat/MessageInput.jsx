@@ -28,7 +28,6 @@ function MessageInput({ onSend, isNewChat, waitingForResponse }) {
       />
       <button
         type="submit"
-        // className="send-message-btn"
         className={isNewChat ? "start-chat-btn" : "send-message-btn"}
         disabled={waitingForResponse}
       >
