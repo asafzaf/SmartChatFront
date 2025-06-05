@@ -58,7 +58,7 @@ function MessageList({
 
       setSelectedMessage(null);
       setFormData({
-        rating: 5,
+        rating: 10,
         qualitative: "",
         interactionDetails: {
           examplesEnough: "",

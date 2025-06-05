@@ -152,8 +152,7 @@ const createNewChat = (
   userId,
   message,
   setLoadingMessages,
-  setMessages,
-  setWaitingForResponse
+  setMessages
 ) => {
   if (!socket || !userId) return;
 
@@ -176,17 +175,7 @@ const createNewChat = (
     isBot: false,
   };
 
-  // Add temporary waiting message
-  // const waitingMessage = {
-  //   sender: "bot",
-  //   message: "",
-  //   timestamp: new Date(),
-  //   isBot: true,
-  //   isTyping: true,
-  // };
-
   setMessages([userMessage]);
-  // setWaitingForResponse(true);
 };
 
 export {

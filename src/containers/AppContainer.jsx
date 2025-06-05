@@ -1,4 +1,3 @@
-// import { updateUserPreferences } from "../api/user";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
@@ -19,18 +18,14 @@ function AppContainer() {
   const [messages, setMessages] = useState([]);
   const [chatList, setChatList] = useState([]);
   const [selectedChatId, setSelectedChatId] = useState(null);
-  // const [loading, setLoading] = useState(true);
   const [loadingChatList, setLoadingChatList] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [waitingForResponse, setWaitingForResponse] = useState(false);
-  const [isNewChat, setIsNewChat] = useState(true); // Flag to indicate if it's a new chat
-  // const [error, setError] = useState(null);
+  const [isNewChat, setIsNewChat] = useState(true);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
-
-  // console.log("currentUser:", currentUser);
 
   // Initialize Socket.io connection and load chats on initial load
   useEffect(() => {

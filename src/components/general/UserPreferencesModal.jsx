@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { updateUser } from "../../api/user";
 import { useAuth } from "../../context/AuthContext";
 
 function UserPreferencesModal({ data, onClose }) {
@@ -72,7 +71,7 @@ function UserPreferencesModal({ data, onClose }) {
             className="form-columns"
             style={{ display: "flex", gap: "2rem" }}
           >
-            {/* Left Column: Information */}
+            {/* Personal Information */}
             <div className="form-column" style={{ paddingLeft: "20px" }}>
               <h3 className="form-sub-title">Personal Information</h3>
               <div className="form-group">
@@ -127,7 +126,7 @@ function UserPreferencesModal({ data, onClose }) {
                 </label>
               </div>
             </div>
-            {/* Right Column: Preferences */}
+            {/* Professional Background */}
             <div className="form-column">
               <h3 className="form-sub-title">Professional Background</h3>
               <div className="form-group">
@@ -156,6 +155,7 @@ function UserPreferencesModal({ data, onClose }) {
                   </select>
                 </label>
               </div>
+              {/* Response Preferences */}
               <h3 className="form-sub-title">Response Preferences</h3>
               <div className="form-group">
                 <label>Answer Style</label>
