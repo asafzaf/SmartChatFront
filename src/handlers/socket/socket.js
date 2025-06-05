@@ -124,6 +124,7 @@ const sendMessageToExistingChat = (
     timestamp: new Date(),
     isBot: true,
     isTyping: true,
+    gotFeedback: true,
   };
 
   setMessages((prevMessages) => [...prevMessages, userMessage, waitingMessage]);
@@ -176,16 +177,16 @@ const createNewChat = (
   };
 
   // Add temporary waiting message
-  const waitingMessage = {
-    sender: "bot",
-    message: "",
-    timestamp: new Date(),
-    isBot: true,
-    isTyping: true,
-  };
+  // const waitingMessage = {
+  //   sender: "bot",
+  //   message: "",
+  //   timestamp: new Date(),
+  //   isBot: true,
+  //   isTyping: true,
+  // };
 
-  setMessages([userMessage, waitingMessage]);
-  setWaitingForResponse(true);
+  setMessages([userMessage]);
+  // setWaitingForResponse(true);
 };
 
 export {
