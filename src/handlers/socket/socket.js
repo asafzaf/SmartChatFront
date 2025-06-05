@@ -50,7 +50,7 @@ const initializeSocket = (
   );
 
   // Setup message event handlers
-  setupMessageHandlers(socket, setMessages, setWaitingForResponse);
+  setupMessageHandlers(socket, setChatList, setMessages, setWaitingForResponse);
 
   // Request initial chat list if user is authenticated
   if (userId) {
@@ -66,13 +66,19 @@ const initializeSocket = (
  * @param {string} chatId - Chat ID to join
  * @param {Function} setLoadingMessages - State setter for loading messages
  */
-const joinChatRoom = (socket, chatId, setLoadingMessages) => {
+const joinChatRoom = (socket, chatId, setChatList, setLoadingMessages) => {
   if (!socket || !chatId) return;
   setLoadingMessages(true);
 
   try {
     socket.emit("join_room", chatId);
     console.log(`Joined room: ${chatId}`);
+    setChatList((prevChatList) =>
+      prevChatList.map((chat) =>
+        chat._id === chatId ? { ...chat, hasNewMessages: false } : chat
+      )
+    );
+
     setLoadingMessages(false);
   } catch (err) {
     console.error("Error joining chat room:", err);
@@ -118,6 +124,7 @@ const sendMessageToExistingChat = (
     timestamp: new Date(),
     isBot: true,
     isTyping: true,
+    gotFeedback: true,
   };
 
   setMessages((prevMessages) => [...prevMessages, userMessage, waitingMessage]);
@@ -170,16 +177,16 @@ const createNewChat = (
   };
 
   // Add temporary waiting message
-  const waitingMessage = {
-    sender: "bot",
-    message: "",
-    timestamp: new Date(),
-    isBot: true,
-    isTyping: true,
-  };
+  // const waitingMessage = {
+  //   sender: "bot",
+  //   message: "",
+  //   timestamp: new Date(),
+  //   isBot: true,
+  //   isTyping: true,
+  // };
 
-  setMessages([userMessage, waitingMessage]);
-  setWaitingForResponse(true);
+  setMessages([userMessage]);
+  // setWaitingForResponse(true);
 };
 
 export {

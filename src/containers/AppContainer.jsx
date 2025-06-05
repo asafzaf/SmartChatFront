@@ -1,7 +1,9 @@
+// import { updateUserPreferences } from "../api/user";
 import { useAuth } from "../context/AuthContext";
 import { useEffect, useState, useRef } from "react";
 import ChatWindow from "../components/chat/ChatWindow";
 import ChatList from "../components/chat/ChatList";
+import UserPreferencesModal from "../components/general/UserPreferencesModal";
 import logo from "../assets/logo.png";
 import { getChatList, deleteChat } from "../api/chat";
 import {
@@ -10,6 +12,7 @@ import {
   sendMessageToExistingChat,
   createNewChat,
 } from "../handlers/socket/socket";
+import { sendFeedback } from "../api/feedback.js";
 
 function AppContainer() {
   const { currentUser, logout } = useAuth();
@@ -22,10 +25,12 @@ function AppContainer() {
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true); // Flag to indicate if it's a new chat
   // const [error, setError] = useState(null);
-
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
+
+  // console.log("currentUser:", currentUser);
 
   // Initialize Socket.io connection and load chats on initial load
   useEffect(() => {
@@ -89,7 +94,12 @@ function AppContainer() {
   useEffect(() => {
     if (!socketRef.current || !userId || !selectedChatId) return;
 
-    joinChatRoom(socketRef.current, selectedChatId, setLoadingMessages);
+    joinChatRoom(
+      socketRef.current,
+      selectedChatId,
+      setChatList,
+      setLoadingMessages
+    );
   }, [userId, selectedChatId]);
 
   const handleSend = async (prompt) => {
@@ -169,6 +179,35 @@ function AppContainer() {
     }
   };
 
+  const handleFeedback = async (message, feedback) => {
+    if (!userId || !selectedChatId) return;
+    if (!message || !feedback) {
+      console.error("Message or feedback is missing");
+      return;
+    }
+    console.log(
+      "Sending feedback for message:",
+      message,
+      "Feedback:",
+      feedback
+    );
+    try {
+      const res = await sendFeedback(userId, selectedChatId, feedback);
+      if (res.error) {
+        console.error("Failed to send feedback:", res.error);
+        return;
+      }
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg._id === message._id ? { ...msg, gotFeedback: true } : msg
+        )
+      );
+      console.log("Feedback sent successfully:", res);
+    } catch (err) {
+      console.error("Error sending feedback:", err);
+    }
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -178,6 +217,12 @@ function AppContainer() {
           </span>
           <img src={logo} alt="Logo" className="app-logo" />
           <div className="user-info">
+            <button
+              className="preferences-btn"
+              onClick={() => setShowPreferencesModal(true)}
+            >
+              Settings
+            </button>
             <button className="logout-btn" onClick={logout}>
               Logout
             </button>
@@ -199,6 +244,7 @@ function AppContainer() {
           <ChatWindow
             messages={messages}
             onSend={handleSend}
+            onFeedback={handleFeedback}
             loading={loadingMessages}
             userData={currentUser.data.user}
             waitingForResponse={waitingForResponse}
@@ -206,6 +252,12 @@ function AppContainer() {
           />
         </div>
       </main>
+      {showPreferencesModal && (
+        <UserPreferencesModal
+          data={currentUser?.data?.user}
+          onClose={() => setShowPreferencesModal(false)}
+        />
+      )}
     </div>
   );
 }

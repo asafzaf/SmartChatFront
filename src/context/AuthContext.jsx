@@ -2,6 +2,7 @@
 import { createContext, useState, useEffect, useContext } from "react";
 
 import { signIn, signUp } from "../api/auth"; // Import your API functions here
+import { updateUser } from "../api/user";
 
 // Create the context
 export const AuthContext = createContext(null);
@@ -53,7 +54,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error("Login failed:", error);
-      return { success: false, error: error.message || "Login failed" };
+      return { success: false, error: error.response.data.message || "Login failed" };
     }
   };
 
@@ -83,7 +84,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error("Signup failed:", error);
-      return { success: false, error: error.message || "Signup failed" };
+      return { success: false, error: error.response.data.message || "Signup failed" };
     }
   };
 
@@ -93,11 +94,35 @@ export const AuthProvider = ({ children }) => {
     setCurrentUser(null);
   };
 
+  // Update user function
+  const syncUpdateUser = async (newUserData, userId) => {
+    try {
+      // Replace with your actual API call
+      // const response = await api.put('/updateUser', userData);
+      // const updatedUserData = response.data;
+
+      const updatedUserData = await updateUser(newUserData, userId); // Assuming signUp is used for updating as well
+      if (!updatedUserData) {
+        throw new Error("Update failed");
+      }
+
+      // Store in localStorage and context
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+      setCurrentUser(updatedUserData);
+      window.location.reload();
+      return { success: true };
+    } catch (error) {
+      console.error("Update failed:", error);
+      return { success: false, error: error.message || "Update failed" };
+    }
+  };
+
   const value = {
     currentUser,
     login,
     signup,
     logout,
+    syncUpdateUser,
     loading,
   };
 
