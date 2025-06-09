@@ -28,7 +28,6 @@ export const deleteChat = async (chatId) => {
     const userId = getUserId();
     const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log("Enter chat deleting");
     const res = await axios.delete(`${apiUrl}/api/chat/${chatId}`, {
       data: { userId },
       headers: headers,

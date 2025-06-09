@@ -25,8 +25,6 @@ const initializeSocket = (
   setIsNewChat,
   setWaitingForResponse
 ) => {
-  console.log("Initializing Socket.io connection...");
-  console.log("User ID:", userId);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const socket = io(apiUrl, {
@@ -72,7 +70,6 @@ const joinChatRoom = (socket, chatId, setChatList, setLoadingMessages) => {
 
   try {
     socket.emit("join_room", chatId);
-    console.log(`Joined room: ${chatId}`);
     setChatList((prevChatList) =>
       prevChatList.map((chat) =>
         chat._id === chatId ? { ...chat, hasNewMessages: false } : chat
@@ -104,8 +101,6 @@ const sendMessageToExistingChat = (
   setWaitingForResponse
 ) => {
   if (!socket || !chatId) return;
-
-  console.log("Sending message to existing chat:", chatId);
 
   // Add user message to UI immediately
   const userMessage = {
@@ -156,7 +151,6 @@ const createNewChat = (
 ) => {
   if (!socket || !userId) return;
 
-  console.log("Creating new chat...");
   setLoadingMessages(true);
 
   let data = {

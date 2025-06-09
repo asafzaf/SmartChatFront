@@ -59,17 +59,14 @@ function AppContainer() {
     };
 
     const initChats = async () => {
-      console.log("Loading chat list...");
       setLoadingChatList(true);
 
       try {
         const chatlist = await getChatList(userId);
-        console.log("Chat list received:", chatlist);
 
         if (chatlist.error) {
           console.error("Error fetching chat list:", chatlist.error);
         } else {
-          console.log("Chat list:", chatlist.data.chatList);
           setTimeout(() => {
             setChatList(chatlist.data.chatList);
             setLoadingChatList(false);
@@ -180,12 +177,7 @@ function AppContainer() {
       console.error("Message or feedback is missing");
       return;
     }
-    console.log(
-      "Sending feedback for message:",
-      message,
-      "Feedback:",
-      feedback
-    );
+
     try {
       const res = await sendFeedback(userId, selectedChatId, feedback);
       if (res.error) {
@@ -197,7 +189,6 @@ function AppContainer() {
           msg._id === message._id ? { ...msg, gotFeedback: true } : msg
         )
       );
-      console.log("Feedback sent successfully:", res);
     } catch (err) {
       console.error("Error sending feedback:", err);
     }

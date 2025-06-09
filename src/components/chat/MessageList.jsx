@@ -44,12 +44,8 @@ function MessageList({
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
     try {
       await onFeedback(selectedMessage, formData);
-      if (selectedMessage?._id) {
-        console.log("Message marked as feedback given:", selectedMessage._id);
-      }
       setLocalMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg._id === selectedMessage._id ? { ...msg, gotFeedback: true } : msg

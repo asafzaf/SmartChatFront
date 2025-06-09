@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 function UserPreferencesModal({ data, onClose }) {
-  console.log("User data:", data);
-
   const { syncUpdateUser } = useAuth();
 
   const [newPassword, setNewPassword] = useState("");
@@ -43,7 +41,6 @@ function UserPreferencesModal({ data, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data to be sent:", formData);
 
     if (newPassword) setFormData({ ...formData, password: newPassword });
     if (newPassword !== confirmPassword) {
@@ -56,7 +53,6 @@ function UserPreferencesModal({ data, onClose }) {
         console.error("Failed to update user:", response.error);
         return;
       }
-      console.log("User updated successfully:", response);
     } catch (error) {
       console.error("Failed to update user:", error);
     }

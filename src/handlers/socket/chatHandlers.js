@@ -25,7 +25,6 @@ const setupChatHandlers = (
 
   // Chat history received handler
   socket.on("chat_history", (messages) => {
-    console.log("Received chat history:", messages);
     if (messages.length === 1) {
       messages.push({
         chatId: messages[0].chatId,
@@ -42,8 +41,6 @@ const setupChatHandlers = (
 
   // New chat created handler
   socket.on("chat_created", (data) => {
-    console.log("New chat created:", data);
-
     // Add new chat to chat list
     setChatList((prevChatList) => [...prevChatList, data.chat]);
 

@@ -8,7 +8,6 @@ export const sendFeedback = async (userId, chatId, feedback) => {
     }
     const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
-    console.log(userId, chatId, feedback);
     const response = await axios.post(
       `${apiUrl}/api/feedback`,
       {

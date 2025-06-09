@@ -3,7 +3,6 @@ import axios from "axios";
 import { createHeaders } from "./api.conf";
 
 export const updateUser = async (data, userId) => {
-  console.log("Updating user preferences:", data, userId);
   try {
     if (!userId) {
       throw new Error("User ID is required to update user preferences");
