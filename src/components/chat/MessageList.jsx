@@ -28,7 +28,7 @@ function MessageList({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [localMessages]);
 
   useEffect(() => {
     setLocalMessages(messages);
@@ -110,95 +110,116 @@ function MessageList({
       {/* Feedback Model Form */}
       {selectedMessage && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="feedback-modal modal-content">
             <h2>Chat Feedback</h2>
             <form onSubmit={handleSubmitForm}>
-              <div className="model-filed">
-                <label>How would you rate this answer? </label>
-                <label className="rating-label">
-                  (1 = very bad, 10 = very good)
-                </label>
-                <input
-                  className="rating-input"
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={formData.rating}
-                  name="rating"
-                  onChange={handleChange}
-                  required
-                />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                <div>
+                  <div className="form-group">
+                    <label>How would you rate this answer? </label>
+                    <label style={{ fontSize: "0.8rem" }}>
+                      (1 = very bad, 10 = very good)
+                    </label>
+                    <input
+                      className="rating-input"
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={formData.rating}
+                      name="rating"
+                      onChange={handleChange}
+                      required
+                      style={{ width: "350px" }}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Any feedback you'd like to share? (optional)</label>
+                    <textarea
+                      value={formData.qualitative}
+                      name="qualitative"
+                      onChange={handleChange}
+                      placeholder="Write your qualitative feedback here"
+                      style={{ width: "350px" }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="form-group model-filed-secondary">
+                    <label>Were there enough examples?</label>
+                    <select
+                      name="examplesEnough"
+                      value={formData.interactionDetails.examplesEnough}
+                      onChange={handleChange}
+                      style={{ width: "350px" }}
+                    >
+                      <option value="" disabled hidden>
+                        -- Select --
+                      </option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  <div className="form-group model-filed-secondary">
+                    <label>Was the answer detailed enough?</label>
+                    <select
+                      name="detailLevel"
+                      value={formData.interactionDetails.detailLevel}
+                      onChange={handleChange}
+                      style={{ width: "350px" }}
+                    >
+                      <option value="" disabled hidden>
+                        -- Select --
+                      </option>
+                      <option value="too_concise">Yes</option>
+                      <option value="too_detailed">No</option>
+                    </select>
+                  </div>
+                  <div className="form-group model-filed-secondary">
+                    <label>Was the answer clear?</label>
+                    <select
+                      name="clarity"
+                      value={formData.interactionDetails.clarity}
+                      onChange={handleChange}
+                      style={{ width: "350px" }}
+                    >
+                      <option value="" disabled hidden>
+                        -- Select --
+                      </option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  <div className="form-group model-filed-secondary">
+                    <label>
+                      Was it too long? Would you prefer something shorter?{" "}
+                    </label>
+                    <select
+                      name="length"
+                      value={formData.interactionDetails.length}
+                      onChange={handleChange}
+                      aria-placeholder="Select length"
+                      style={{ width: "350px" }}
+                    >
+                      <option value="" disabled hidden>
+                        -- Select --
+                      </option>
+                      <option value="too_short">Too Short</option>
+                      <option value="too_long">Too Long</option>
+                      <option value="fine">Just fine</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div className="model-filed">
-                <label>Any feedback you'd like to share? (optional)</label>
-                <textarea
-                  value={formData.qualitative}
-                  name="qualitative"
-                  onChange={handleChange}
-                  placeholder="Write your qualitative feedback here"
-                />
-              </div>
-              <div className="model-filed model-files-secondary">
-                <label>Were there enough examples?</label>
-                <select
-                  name="examplesEnough"
-                  value={formData.interactionDetails.examplesEnough}
-                  onChange={handleChange}
-                >
-                  <option value="" disabled hidden>
-                    -- Select --
-                  </option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
-              <div className="model-filed model-files-secondary">
-                <label>Was the answer detailed enough?</label>
-                <select
-                  name="detailLevel"
-                  value={formData.interactionDetails.detailLevel}
-                  onChange={handleChange}
-                >
-                  <option value="" disabled hidden>
-                    -- Select --
-                  </option>
-                  <option value="too_concise">Yes</option>
-                  <option value="too_detailed">No</option>
-                </select>
-              </div>
-              <div className="model-filed model-files-secondary">
-                <label>Was the answer clear?</label>
-                <select
-                  name="clarity"
-                  value={formData.interactionDetails.clarity}
-                  onChange={handleChange}
-                >
-                  <option value="" disabled hidden>
-                    -- Select --
-                  </option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
-              <div className="model-filed model-files-secondary">
-                <label>
-                  Was it too long? Would you prefer something shorter?{" "}
-                </label>
-                <select
-                  name="length"
-                  value={formData.interactionDetails.length}
-                  onChange={handleChange}
-                  aria-placeholder="Select length"
-                >
-                  <option value="" disabled hidden>
-                    -- Select --
-                  </option>
-                  <option value="too_short">Too Short</option>
-                  <option value="too_long">Too Long</option>
-                  <option value="fine">Just fine</option>
-                </select>
-              </div>
-              <div className="modal-actions">
+              <div
+                className="modal-actions feedback-modal-actions"
+                style={{ paddingRight: "14px" }}
+              >
                 <button type="submit" className="send-btn">
                   Send
                 </button>
