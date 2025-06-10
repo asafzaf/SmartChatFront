@@ -465,6 +465,14 @@ button:active {
   cursor: not-allowed;
 }
 
+::marker {
+  font-weight: 700;
+}
+
+.bot-message li {
+  margin-left: 10px;
+}
+
 .bot-message p {
   text-align: left;
   color: #000;
@@ -610,18 +618,18 @@ label {
   color: #333;
 }
 
-.model-filed {
+/* .model-filed {
   margin-bottom: 25px;
   margin-top: 25px;
-}
+} */
 
-.model-files-secondary {
+/* .model-files-secondary {
   display: flex;
   flex-direction: row;
   gap: 10px;
-}
+} */
 
-.model-files-secondary select {
+.model-filed-secondary select {
   border: 1px solid #ddd;
   border-radius: 10px;
 }
@@ -675,11 +683,6 @@ label {
   background-color: #2f8bc9;
 }
 
-.rating-label {
-  font-size: 0.9em;
-  color: #555;
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -731,11 +734,16 @@ label {
   border-color: #3498db;
 }
 
+.feedback-modal {
+  width: 50rem;
+}
+
 .feedback-modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding-right: 40px;
+  margin-top: 30px;
 }
 
 .form-column {
