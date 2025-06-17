@@ -207,10 +207,7 @@ function UserPreferencesModal({ data, setUser, onClose }) {
             </div>
           </div>
           {errorMessage && (
-            <div
-              className="form-error-message"
-              style={{ color: "red", marginBottom: "1rem" }}
-            >
+            <div className="error-message" style={{ marginBottom: "1rem" }}>
               {errorMessage}
             </div>
           )}
