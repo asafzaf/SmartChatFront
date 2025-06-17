@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { updateUser } from "../../api/user";
 
 function UserPreferencesModal({ data, onClose }) {
-  const { syncUpdateUser } = useAuth();
-
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -48,11 +46,12 @@ function UserPreferencesModal({ data, onClose }) {
       return;
     }
     try {
-      const response = await syncUpdateUser(formData, data._id);
+      const response = await updateUser(formData, data._id);
       if (response.error) {
         console.error("Failed to update user:", response.error);
         return;
       }
+      onClose();
     } catch (error) {
       console.error("Failed to update user:", error);
     }
