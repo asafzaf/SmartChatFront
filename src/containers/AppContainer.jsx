@@ -23,6 +23,7 @@ function AppContainer() {
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const [user, setUser] = useState(currentUser.data.user);
   const socketRef = useRef(null);
 
   const userId = currentUser?.data?.user?._id;
@@ -199,7 +200,7 @@ function AppContainer() {
       <header className="app-header">
         <div className="header-content">
           <span className="header-welcom-message">
-            Hello {currentUser.data.user.first_name} !
+            Hello {user.first_name} !
           </span>
           <img src={logo} alt="Logo" className="app-logo" />
           <div className="user-info">
@@ -240,7 +241,8 @@ function AppContainer() {
       </main>
       {showPreferencesModal && (
         <UserPreferencesModal
-          data={currentUser?.data?.user}
+          data={user}
+          setUser={setUser}
           onClose={() => setShowPreferencesModal(false)}
         />
       )}
