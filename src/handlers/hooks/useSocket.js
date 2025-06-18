@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { 
-  initializeSocket, 
-  joinChatRoom, 
-  sendMessageToExistingChat, 
-  createNewChat 
-} from '../socket/socket';
+import { useState, useEffect, useRef } from "react";
+import {
+  initializeSocket,
+  joinChatRoom,
+  sendMessageToExistingChat,
+  createNewChat,
+} from "../socket/socket";
 
 /**
  * Custom hook for managing Socket.io functionality
@@ -19,7 +19,7 @@ const useSocket = (userId) => {
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [waitingForResponse, setWaitingForResponse] = useState(false);
   const [isNewChat, setIsNewChat] = useState(true);
-  
+
   const socketRef = useRef(null);
 
   // Initialize socket connection
@@ -48,7 +48,7 @@ const useSocket = (userId) => {
   // Join chat room when selectedChatId changes
   useEffect(() => {
     if (!socketRef.current || !userId || !selectedChatId) return;
-    
+
     joinChatRoom(socketRef.current, selectedChatId, setLoadingMessages);
   }, [userId, selectedChatId]);
 
@@ -62,6 +62,7 @@ const useSocket = (userId) => {
     try {
       if (isNewChat) {
         createNewChat(
+          // if user start a new chat
           socketRef.current,
           userId,
           prompt,
@@ -71,6 +72,7 @@ const useSocket = (userId) => {
         );
       } else {
         sendMessageToExistingChat(
+          // if user send a message to existing chat (continues the conversation)
           socketRef.current,
           selectedChatId,
           userId,
@@ -122,12 +124,12 @@ const useSocket = (userId) => {
     loadingMessages,
     waitingForResponse,
     isNewChat,
-    
+
     // Methods
     handleSend,
     handleChatSelect,
     setNewChatMode,
-    
+
     // Setters (in case parent components need direct access)
     setMessages,
     setChatList,
@@ -135,7 +137,7 @@ const useSocket = (userId) => {
     setLoadingMessages,
     setLoadingChatList,
     setWaitingForResponse,
-    setIsNewChat
+    setIsNewChat,
   };
 };
 
