@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { updateUser } from "../../api/user";
 
-function UserPreferencesModal({ data, onClose }) {
-  const { syncUpdateUser } = useAuth();
-
+function UserPreferencesModal({ data, setUser, onClose }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [formData, setFormData] = useState({
     first_name: data.first_name || "",
@@ -41,19 +40,31 @@ function UserPreferencesModal({ data, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
     if (newPassword) setFormData({ ...formData, password: newPassword });
     if (newPassword !== confirmPassword) {
       console.error("Passwords do not match");
+      setErrorMessage("Passwords do not match.");
       return;
     }
+
+    const updateUserData = {
+      ...formData,
+      _id: data._id,
+    };
+
     try {
-      const response = await syncUpdateUser(formData, data._id);
+      const response = await updateUser(formData, data._id);
       if (response.error) {
         console.error("Failed to update user:", response.error);
+        setErrorMessage("Failed to update user, please try again later.");
         return;
       }
+      setUser(updateUserData);
+      onClose();
     } catch (error) {
+      setErrorMessage("An unexpected error occurred.");
       console.error("Failed to update user:", error);
     }
   };
@@ -116,7 +127,10 @@ function UserPreferencesModal({ data, onClose }) {
                     type="password"
                     name="confirmPassword"
                     value={confirmPassword}
-                    placeholder="Leave blank to keep current password"
+                    placeholder={
+                      newPassword ? "Please confirm your new password" : " "
+                    }
+                    disabled={!newPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                 </label>
@@ -191,6 +205,12 @@ function UserPreferencesModal({ data, onClose }) {
               </div>
             </div>
           </div>
+          {errorMessage && (
+            <div className="error-message" style={{ marginBottom: "1rem" }}>
+              {errorMessage}
+            </div>
+          )}
+
           {/* Form buttons */}
           <div className="feedback-modal-actions" style={{ marginTop: "2rem" }}>
             <button type="submit" className="send-btn">
