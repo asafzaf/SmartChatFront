@@ -2,7 +2,6 @@ import { useState } from "react";
 import { updateUser } from "../../api/user";
 
 function UserPreferencesModal({ data, setUser, onClose }) {
-  console.log("UserPreferencesModal data:", data);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
