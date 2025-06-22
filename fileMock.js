@@ -1,0 +1,2 @@
+// fileMock.js
+export default "";
