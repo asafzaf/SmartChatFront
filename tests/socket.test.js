@@ -1,5 +1,3 @@
-// tests/socket.test.js
-
 jest.mock("../src/handlers/socket/socket.js", () => {
   const mockSocket = { emit: jest.fn(), id: "s123" };
 
@@ -10,12 +8,23 @@ jest.mock("../src/handlers/socket/socket.js", () => {
         emit: jest.fn(),
         id: "mockSocket123",
       };
-      const setupConnectionHandlers = require("../src/handlers/socket/connectionHandlers.js").default;
-      const setupChatHandlers = require("../src/handlers/socket/chatHandlers.js").default;
-      const setupMessageHandlers = require("../src/handlers/socket/messageHandlers.js").default;
+      const setupConnectionHandlers =
+        require("../src/handlers/socket/connectionHandlers.js").default;
+      const setupChatHandlers =
+        require("../src/handlers/socket/chatHandlers.js").default;
+      const setupMessageHandlers =
+        require("../src/handlers/socket/messageHandlers.js").default;
 
       setupConnectionHandlers(socket, "userABC");
-      setupChatHandlers(socket, "userABC", jest.fn(), jest.fn(), jest.fn(), jest.fn(), jest.fn());
+      setupChatHandlers(
+        socket,
+        "userABC",
+        jest.fn(),
+        jest.fn(),
+        jest.fn(),
+        jest.fn(),
+        jest.fn()
+      );
       setupMessageHandlers(socket, jest.fn(), jest.fn(), jest.fn());
 
       socket.emit("request_chat_list", "userABC");
@@ -31,27 +40,29 @@ jest.mock("../src/handlers/socket/socket.js", () => {
       );
       setLoadingMessages(false);
     }),
-    sendMessageToExistingChat: jest.fn((socket, chatId, userId, msg, setMessages, setWaiting) => {
-      const userMessage = {
-        chatId,
-        sender: userId,
-        text: msg,
-        timestamp: new Date(),
-        isBot: false,
-      };
-      const waitingMessage = {
-        chatId,
-        sender: "bot",
-        text: "I'm thinking...",
-        timestamp: new Date(),
-        isBot: true,
-        isTyping: true,
-        gotFeedback: true,
-      };
-      setMessages((prev) => [...prev, userMessage, waitingMessage]);
-      socket.emit("send_message", { chatId, message: msg });
-      setWaiting(true);
-    }),
+    sendMessageToExistingChat: jest.fn(
+      (socket, chatId, userId, msg, setMessages, setWaiting) => {
+        const userMessage = {
+          chatId,
+          sender: userId,
+          text: msg,
+          timestamp: new Date(),
+          isBot: false,
+        };
+        const waitingMessage = {
+          chatId,
+          sender: "bot",
+          text: "I'm thinking...",
+          timestamp: new Date(),
+          isBot: true,
+          isTyping: true,
+          gotFeedback: true,
+        };
+        setMessages((prev) => [...prev, userMessage, waitingMessage]);
+        socket.emit("send_message", { chatId, message: msg });
+        setWaiting(true);
+      }
+    ),
     createNewChat: jest.fn((socket, userId, msg, setLoading, setMessages) => {
       setLoading(true);
       socket.emit("create_chat", {
@@ -170,7 +181,7 @@ describe("socket.js – Tests without import.meta", () => {
       jest.fn(), // setMessages
       jest.fn(), // setSelectedChatId
       jest.fn(), // setIsNewChat
-      jest.fn()  // setWaitingForResponse
+      jest.fn() // setWaitingForResponse
     );
 
     expect(socket.emit).toHaveBeenCalledWith("request_chat_list", "userABC");
@@ -178,5 +189,4 @@ describe("socket.js – Tests without import.meta", () => {
     expect(setupChatHandlers).toHaveBeenCalled();
     expect(setupMessageHandlers).toHaveBeenCalled();
   });
-  
 });

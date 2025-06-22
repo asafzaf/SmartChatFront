@@ -1,2 +1,1 @@
-// fileMock.js
 export default "";

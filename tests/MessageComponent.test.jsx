@@ -1,5 +1,3 @@
-// tests/MessageComponent.test.jsx
-
 import { render, screen, fireEvent } from "@testing-library/react";
 import MessageComponent from "../src/components/chat/MessageComponent";
 
@@ -56,9 +54,7 @@ describe("MessageComponent", () => {
         index={0}
       />
     );
-    expect(
-      screen.getByText("**Hello** _from bot_")
-    ).toBeInTheDocument();
+    expect(screen.getByText("**Hello** _from bot_")).toBeInTheDocument();
   });
 
   // Test 3: Shows feedback button on odd index if feedback not yet given
@@ -103,5 +99,4 @@ describe("MessageComponent", () => {
       screen.queryByText("Want to Share Feedback?")
     ).not.toBeInTheDocument();
   });
-
 });

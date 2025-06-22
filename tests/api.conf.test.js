@@ -1,5 +1,3 @@
-// tests/api.conf.test.js
-
 import { createHeaders, getUserId } from "../src/api/api.conf.js";
 
 describe("api.conf.js", () => {
@@ -49,5 +47,4 @@ describe("api.conf.js", () => {
     const userId = getUserId();
     expect(userId).toBeNull();
   });
-
 });

@@ -1,5 +1,3 @@
-// tests/chat.test.js
-
 import axios from "axios";
 import * as config from "../src/api/api.conf.js";
 
@@ -59,10 +57,12 @@ describe("chat.js – API Functions (mocked)", () => {
     );
     expect(result).toEqual(["chat1", "chat2"]);
   });
-  
+
   // Test 2 Throws error when getChatList is called without userId
   test("getChatList throws error when no userId", async () => {
-    await expect(getChatList(null)).rejects.toThrow("User ID is required to fetch chat list");
+    await expect(getChatList(null)).rejects.toThrow(
+      "User ID is required to fetch chat list"
+    );
   });
   // Test 3 Verifies deleteChat sends correct axios DELETE request
   test("deleteChat calls axios.delete with correct URL and headers", async () => {
@@ -93,5 +93,4 @@ describe("chat.js – API Functions (mocked)", () => {
       error: expect.any(Error),
     });
   });
-
 });

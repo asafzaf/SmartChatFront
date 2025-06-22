@@ -1,10 +1,10 @@
-// tests/feedback.test.js
-
 import axios from "axios";
 import * as config from "../src/api/api.conf.js";
 
 jest.mock("axios");
-jest.spyOn(config, "createHeaders").mockReturnValue({ Authorization: "Bearer xyz" });
+jest
+  .spyOn(config, "createHeaders")
+  .mockReturnValue({ Authorization: "Bearer xyz" });
 
 const apiUrl = "https://mocked-api.com";
 
@@ -60,7 +60,9 @@ describe("feedback.js – with local implementation", () => {
   // Test 5: Throws error if axios request fails
   test("throws axios error when request fails", async () => {
     axios.post.mockRejectedValue(new Error("Network error"));
-    await expect(sendFeedback("user1", "chat1", {})).rejects.toThrow("Network error");
+    await expect(sendFeedback("user1", "chat1", {})).rejects.toThrow(
+      "Network error"
+    );
   });
 
   // Test 6: Calls createHeaders to include auth in request
@@ -69,5 +71,4 @@ describe("feedback.js – with local implementation", () => {
     await sendFeedback("user1", "chat1", {});
     expect(config.createHeaders).toHaveBeenCalled();
   });
-  
 });

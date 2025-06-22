@@ -1,5 +1,3 @@
-// tests/auth.test.js
-
 import axios from "axios";
 
 jest.mock("../src/api/auth.js", () => {
@@ -64,5 +62,4 @@ describe("auth.js – full coverage", () => {
     axios.post.mockRejectedValue(new Error("Login failed"));
     await expect(signIn("a", "b")).rejects.toThrow("Login failed");
   });
-
 });
