@@ -20,7 +20,6 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
-  height: 100vh;
   gap: 20px;
 }
 
@@ -195,6 +194,7 @@ p {
 
 .app-container {
   margin: 0 auto;
+  height: 100vh;
 }
 
 .app-header {
@@ -281,7 +281,6 @@ p {
   overflow-y: auto;
   padding: 10px;
   background-color: rgb(237, 236, 236);
-  border-radius: 10px;
 }
 
 .new-chat-btn {
