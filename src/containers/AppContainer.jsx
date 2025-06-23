@@ -181,7 +181,6 @@ function AppContainer() {
 
     try {
       const res = await sendFeedback(userId, selectedChatId, feedback);
-      console.log("CONTAINER: Feedback:\n", feedback); // TBD
       if (res.error) {
         console.error("Failed to send feedback:", res.error);
         return;

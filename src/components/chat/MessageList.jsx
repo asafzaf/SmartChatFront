@@ -45,7 +45,6 @@ function MessageList({
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     try {
-      console.log("Feedback:\n", formData); // TBD
       await onFeedback(selectedMessage, formData);
       setLocalMessages((prevMessages) =>
         prevMessages.map((msg) =>

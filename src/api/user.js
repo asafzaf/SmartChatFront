@@ -7,7 +7,6 @@ export const updateUser = async (data, userId) => {
     if (!userId) {
       throw new Error("User ID is required to update user preferences");
     }
-    // console.log("Updating user id:", userId, "with data:", data);
     const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
     const res = await axios.put(

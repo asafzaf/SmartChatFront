@@ -30,11 +30,6 @@ const setupMessageHandlers = (
         if (!messagesWithoutTyping.some((msg) => msg._id === botMessage._id)) {
           return [...messagesWithoutTyping, botMessage];
         }
-      } else {
-        // console.log(
-        //   "Currently not on the specific chat, ignoring message:",
-        //   chatId
-        // );
       }
 
       return messagesWithoutTyping;
@@ -56,11 +51,6 @@ const setupMessageHandlers = (
 
     setWaitingForResponse(false);
   });
-
-  // Message saved confirmation handler
-  // socket.on("message_saved", (message) => {
-  //   console.log("Message saved confirmation:", message);
-  // });
 };
 
 export default setupMessageHandlers;

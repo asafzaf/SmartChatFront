@@ -15,11 +15,6 @@ const setupConnectionHandlers = (socket, userId) => {
   socket.on("connect_error", (error) => {
     console.error("Socket.io connection error:", error);
   });
-
-  // Disconnection handler
-  // socket.on("disconnect", (reason) => {
-  //   console.log("Disconnected from Socket.io server. Reason:", reason);
-  // });
 };
 
 export default setupConnectionHandlers;
