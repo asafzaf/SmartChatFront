@@ -3,10 +3,6 @@ import { createHeaders, getUserId } from "./api.conf";
 
 export const getChatList = async (userId) => {
   try {
-    // if (!userId) {
-    //   throw new Error("User ID is required to fetch chat list");
-    // }
-
     const userId = getUserId();
     if (!userId) {
       throw new Error("User ID is required to fetch chat list");
