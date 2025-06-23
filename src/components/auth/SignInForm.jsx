@@ -10,10 +10,10 @@ function SignInForm({ handleFlip, onSubmit, error }) {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [id]: value,
+      [name]: value,
     });
   };
 
@@ -38,7 +38,8 @@ function SignInForm({ handleFlip, onSubmit, error }) {
           <label htmlFor="email">Email</label>
           <input
             type="email"
-            id="email"
+            id="sign-in-email"
+            name="email"
             placeholder="Enter your email"
             value={formData.email}
             onChange={handleChange}
@@ -48,10 +49,11 @@ function SignInForm({ handleFlip, onSubmit, error }) {
           />
         </div>
         <div className="sign-in-input">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="sign-in-password">Password</label>
           <input
             type="password"
-            id="password"
+            id="sign-in-password"
+            name="password"
             placeholder="Enter your password"
             value={formData.password}
             onChange={handleChange}
