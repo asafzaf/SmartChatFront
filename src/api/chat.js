@@ -3,14 +3,18 @@ import { createHeaders, getUserId } from "./api.conf";
 
 export const getChatList = async (userId) => {
   try {
+    // if (!userId) {
+    //   throw new Error("User ID is required to fetch chat list");
+    // }
+
+    const userId = getUserId();
     if (!userId) {
       throw new Error("User ID is required to fetch chat list");
     }
-    const userId = getUserId();
     const headers = createHeaders();
     const apiUrl = import.meta.env.VITE_API_URL;
     const response = await axios.get(`${apiUrl}/api/chat/${userId}/list`, {
-      data: { userId },
+      userId: userId,
       headers: headers,
     });
     return response.data;
